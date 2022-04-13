@@ -263,7 +263,17 @@
         </header>
 
         <div class="post-content">
-            <p>本系列为大地电磁一维反演的一些matlab程序，搬运自<a target="_blank" rel="noopener" href="https://github.com/rhezazz/1D-Magnetotelluric-Inversion">Mohammad Rheza Zamani的Github项目：1D-Magnetotelluric-Inversion</a>，共包括以下五种算法：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1D-Magnetotelluric-Inversion</span><br><span class="line"></span><br><span class="line">1. MT FA：萤火虫算法(Firefly Algorithm，FA)</span><br><span class="line"></span><br><span class="line">2. MT BA：蝙蝠算法(Bat algorithm，BAT)</span><br><span class="line"></span><br><span class="line">3. MT PSO：粒子群优化算法(Particle Swarm Optimization，PSO)</span><br><span class="line"></span><br><span class="line">4. MT SA：模拟退火算法(Simulated Anealling，SA)</span><br><span class="line"></span><br><span class="line">5. MT VFSA：非常快速模拟退火算法(Very Fast Simulated Annealing，VFSA)</span><br></pre></td></tr></table></figure></p>
+            <p>本系列为大地电磁一维反演的一些matlab程序，搬运自<a target="_blank" rel="noopener" href="https://github.com/rhezazz/1D-Magnetotelluric-Inversion">Mohammad Rheza Zamani的Github项目：1D-Magnetotelluric-Inversion</a> ，共包括以下五种算法：</p>
+<blockquote>
+<p>1D-Magnetotelluric-Inversion</p>
+<ol>
+<li>MT FA：<a href="https://cocklebur0924.github.io/2022/04/11/MT1Dinv_Firefly/">萤火虫算法(Firefly Algorithm，FA)</a></li>
+<li>MT BA：<a href="https://cocklebur0924.github.io/2022/04/11/MT1Dinv_Bat/">蝙蝠算法(Bat algorithm，BA)</a></li>
+<li>MT PSO：粒子群优化算法(Particle Swarm Optimization，PSO)</li>
+<li>MT SA：模拟退火算法(Simulated Anealling，SA)</li>
+<li>MT VFSA：非常快速模拟退火算法(Very Fast Simulated Annealing，VFSA)</li>
+</ol>
+</blockquote>
 <p>本节为<code>萤火虫算法 MT1D Inversion matlab代码</code></p>
 <h3 id="萤火虫算法-FA-简介"><a href="#萤火虫算法-FA-简介" class="headerlink" title="萤火虫算法(FA)简介"></a>萤火虫算法(FA)简介</h3><p>萤火虫算法(Firefly Algorithm，简称FA)是一种模拟萤火虫闪烁行为的群体智能优化算法，由剑桥大学Xin-She Yang教授于2009年提出$^{[1]}$。</p>
 <p>萤火虫之间通过闪光进行信息的交互，同时也能起到危险预警的作用。我们知道，从光源到特定距离$r$处的光强服从平方反比定律，也就是说，光强$I$随着距离$r$的增加会逐渐降低，即$I\propto 1/r^2$，此外空气也会吸收部分光线，导致光线随着距离的增加而变得越来越弱。这两个因素同时起作用，因而大多数萤火虫只能在有限的距离内被其他萤火虫发现$^{[1,2]}$。</p>
