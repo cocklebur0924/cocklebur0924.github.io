@@ -2,7 +2,7 @@
 title: 大地电磁一维正演 | MT1D Forward 公式详细推导(各向同性)
 date: 2022-03-27 12:00:00
 tags: [Study,MT]
-categories: [Study,MT]
+categories: [Study]
 mathjax: true
 ---
 
@@ -189,7 +189,7 @@ $$\phi=tan^{-1}\frac{Im(Z_1)}{Re(Z_1)} \tag{33}$$
 
 若想实现编程，请参考[MT1D Forward Matlab Code](https://cocklebur0924.github.io/2022/03/25/MT1DForward/)。
 
-Reference:
+### Reference:
 
 [1] 李予国老师2020年海洋电磁学课程讲义
 

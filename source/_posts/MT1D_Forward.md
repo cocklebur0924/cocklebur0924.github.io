@@ -2,7 +2,7 @@
 title: 大地电磁一维正演 | MT1D Forward | matlab code
 date: 2022-03-25 17:32:00
 tags: [Study,MT]
-categories: [Study,MT]
+categories: [Study]
 mathjax: true
 ---
 
@@ -54,22 +54,22 @@ ok 所需要的公式就是这些，下面我们来介绍matlab代码。
 ### Below is the matlab code:
 
 首先定义一个函数``MT1DForward``，该函数可以计算给定频率下一维地电模型的视电阻率和相位。函数的输入为**频率**、**地电模型的电阻率**和**厚度**；函数的输出为**视电阻率($\Omega·m$)**和**相位(度)**
-```
+```matlab
 function [apparentRho,Phase] = MT1DForward(rho,h,f)  
 ```
 然后计算频率个数``nFreqs``和地层层数``nLayer``：
-```
+```matlab
         nFreqs = length(f);
         nLayer = length(rho);
 ```
 对于每一个频率，都需要计算一次响应，因此大循环为频率：
-```
+```matlab
     for iFreq = 1:nFreqs
         omega = 2*pi*f(iFreq);
         u0 = 4*pi*1e-7;
 ```
 小循环为每一层地层(从第$N$层倒推第1层)：
-```        
+```matlab        
             for j = nLayer:-1:1
                 k = sqrt(1i*omega*u0/rho(j));
                 Z0 = sqrt(1i*omega*u0*rho(j));
@@ -83,11 +83,11 @@ function [apparentRho,Phase] = MT1DForward(rho,h,f)
             end
 ```
 最后计算每个频点的地表(第一层顶界面)阻抗，这里的$Z$即$Z_{j=1}$
-```
+```matlab
             Z(iFreq)=Z;
 ```
 然后得到视电阻率和相位：
-```            
+```matlab            
             apparentRho(iFreq) = (abs(Z(iFreq)).^2)./(omega*u0);
             Phase(iFreq) = atan2d(imag(Z(iFreq)),real(Z(iFreq))); 
             % Notice:公式里计算出的相位单位为弧度，这里为°是因为使用atan2d函数转换成了度
@@ -95,7 +95,7 @@ function [apparentRho,Phase] = MT1DForward(rho,h,f)
 end
 ```
 如果想看看长什么样子，就试一个例子吧(记得放到上述代码的前面/重新建一个.m文件)：
-```
+```matlab
 function ShowMT1DForward(varargin)
 f = logspace(-3,3,21)';
 rho = [100;10;100];      % 三层地电模型
@@ -104,14 +104,14 @@ h = [2000;2000];         % 两个厚度(最后一层为均匀半空间)
 [apparentRho,Phase]=MT1DForward(rho,h,f);
 
 subplot(2,1,1)
-    plot(1./f,apparentRho,'ks','LineWidth',1.0)
+    plot(1./f,apparentRho,'o','MarkerSize',5,'MarkerFaceColor',[0,0.45,0.74])
     set(gca,'Yscale','log','Xscale','log','LineWidth',1.5,'FontSize',12)
     xlabel('periods [s]');
     ylabel('apparent \rho [\Omega m]')
     title('Rho');
     axis([10^-3,10^3,10^0,10^4]);
 subplot(2,1,2)
-    plot(1./f,Phase,'ks','LineWidth',1.0)
+    plot(1./f,Phase,'o','MarkerSize',5,'MarkerFaceColor',[0,0.45,0.74])
     set(gca,'Xscale','log','LineWidth',1.5,'FontSize',12)
     xlabel('periods [s]');
     ylabel('phase [\circ]');
@@ -120,13 +120,14 @@ subplot(2,1,2)
 end
 ```
 然后你就会得到该模型的视电阻率和相位曲线咯：
-![MT1D_example](/images/PictureInsert/MT1D_example.bmp)
-
+<div style="display:none">![MT1D_example](/images/PictureInsert/MT1D_ex.png)</div>
+<center><img src=/images/PictureInsert/MT1D_ex.png width=60% /></center>
+<center>正演结果</center>
 ### The end
 
 @.@不方便打开Matlab？那就点击[Matlab在线编辑器(Open in MATLAB Online)](https://matlab.mathworks.com/)试一下吧。
 
-Reference:
+### Reference:
 
 [1] 李予国老师2020年海洋电磁学课程讲义
 
