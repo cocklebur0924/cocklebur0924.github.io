@@ -187,7 +187,7 @@ $$\phi=tan^{-1}\frac{Im(Z_1)}{Re(Z_1)} \tag{33}$$
 
 #### The end
 
-若想实现编程，请参考[MT1D Forward Matlab Code](https://cocklebur0924.github.io/2022/03/25/MT1DForward/)。
+若想实现编程，请参考[MT1D Forward Matlab Code](https://cocklebur0924.github.io/2022/03/25/MT1D_Forward/)。
 
 ### Reference:
 

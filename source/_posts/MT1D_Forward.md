@@ -18,7 +18,7 @@ mathjax: true
 
 在这样的假设下，地球表面阻抗值$Z(\omega)$与地球的真实电阻率$\rho$可以通过下面的式子联系起来：
 $$Z(\omega)=\frac{E_x(\omega)}{H_y(\omega)}=\sqrt{i\omega u_0\rho}$$
-如果你想知道这个式子怎么来的，请点击[MT1D Forward公式详细推导(各向同性)](https://cocklebur0924.github.io/2022/03/27/MT1DFormula/)，里面有详细推导过程o.o因为本文是以编程为目的，所以为了看起来更清晰简单，正文中就尽量不放公式了~ok回到正题，上式中，
+如果你想知道这个式子怎么来的，请点击[MT1D Forward公式详细推导(各向同性)](https://cocklebur0924.github.io/2022/03/27/MT1D_Formula/)，里面有详细推导过程o.o因为本文是以编程为目的，所以为了看起来更清晰简单，正文中就尽量不放公式了~ok回到正题，上式中，
 
 $Z(\omega)$为地球表面阻抗($\Omega$)
 

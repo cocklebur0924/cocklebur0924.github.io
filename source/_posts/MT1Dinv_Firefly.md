@@ -1,6 +1,6 @@
 ---
 title: Firefly Algorithm(FA)大地电磁一维反演 | 萤火虫算法
-date: 2022-04-11 20:21:00
+date: 2022-04-10 20:21:00
 tags: [Study,MT]
 categories: [Study]
 mathjax: true
@@ -9,11 +9,11 @@ mathjax: true
 本系列为大地电磁一维反演的一些matlab程序，搬运自[Mohammad Rheza Zamani的Github项目：1D-Magnetotelluric-Inversion](https://github.com/rhezazz/1D-Magnetotelluric-Inversion) ，共包括以下五种算法：
 
 > 1D-Magnetotelluric-Inversion
-> 1. MT FA：[萤火虫算法(Firefly Algorithm，FA)](https://cocklebur0924.github.io/2022/04/11/MT1Dinv_Firefly/)
-> 2. MT BA：[蝙蝠算法(Bat algorithm，BA)](https://cocklebur0924.github.io/2022/04/11/MT1Dinv_Bat/)
-> 3. MT PSO：粒子群优化算法(Particle Swarm Optimization，PSO)
-> 4. MT SA：模拟退火算法(Simulated Anealling，SA)
-> 5. MT VFSA：非常快速模拟退火算法(Very Fast Simulated Annealing，VFSA)
+> 1. MT FA：[萤火虫算法(Firefly Algorithm，FA)](https://cocklebur0924.github.io/2022/04/10/MT1Dinv_Firefly/)
+> 2. MT BA：[蝙蝠算法(Bat algorithm，BA)](https://cocklebur0924.github.io/2022/04/10/MT1Dinv_Bat/)
+> 3. MT PSO：[粒子群优化算法(Particle Swarm Optimization，PSO)](https://cocklebur0924.github.io/2022/04/10/MT1Dinv_PSO/)
+> 4. MT SA：[模拟退火算法(Simulated Anealling，SA)](https://cocklebur0924.github.io/2022/04/10/MT1Dinv_SA/)
+> 5. MT VFSA：[非常快速模拟退火算法(Very Fast Simulated Annealing，VFSA)](https://cocklebur0924.github.io/2022/04/10/MT1Dinv_VFSA/)
 
 本节为`萤火虫算法 MT1D Inversion matlab代码`
 
@@ -198,7 +198,7 @@ time = toc
     grid on
 ```
 
-其中，子函数modelMT为正演函数，可参考[“大地电磁一维正演”](https://cocklebur0924.github.io/2022/03/25/MT1DForward/)
+其中，子函数modelMT为正演函数，可参考[“大地电磁一维正演”](https://cocklebur0924.github.io/2022/03/25/MT1D_Forward/)
 
 ```matlab
 % Digital Earth Lab

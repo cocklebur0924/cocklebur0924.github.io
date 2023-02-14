@@ -3,9 +3,11 @@ title: about me
 date: 2022-03-17 23:30:00
 ---
 ### Hello, My name is 杨雯
-#### I'm a graduate student at Ocean University of China.
+#### I am an employee of Geophysical Research & Development Center(ChengDu), BGP INC., CNPC.
 
-#### My major is Magnetotelluric Inversion.
+#### I graduated from the Ocean University of China in 2022. 
+
+#### My graduate major is Magnetotelluric Inversion.
 
 #### I will record something here...
 
@@ -13,7 +15,7 @@ date: 2022-03-17 23:30:00
 
 ### I will be very happy if you contact me:
 
-Wechat: 1138413015
+
 QQ: 1138413015
 E-mail: 1138413015@qq.com
 

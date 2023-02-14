@@ -14,7 +14,7 @@ $$D =\sqrt{\frac{\rho_a(T)}{\omega u_0}}=\sqrt{\frac{\rho_a(T)T}{2\pi u_0}}$$
 $$\rho=\rho_a(T)(\frac{\pi}{2\phi(T)}-1)$$
 式中，$D$和$\rho$分别为反演得到的深度和真实电阻率；
 
-$\rho_a$和$\phi$分别为视电阻率和相位，通过[正演计算](https://cocklebur0924.github.io/2022/03/25/MT1DForward/)得到；
+$\rho_a$和$\phi$分别为视电阻率和相位，通过[正演计算](https://cocklebur0924.github.io/2022/03/25/MT1D_Forward/)得到；
 
 $\omega=2\pi f=\frac{2\pi}{T}$为角频率，$T$为周期；
 
@@ -71,10 +71,12 @@ subplot(2,1,2)
     title('Phase');
     axis([10^-3,10^4,25,55]);    
 ```
-其中，MT1DForward函数即[“大地电磁一维正演”](https://cocklebur0924.github.io/2022/03/25/MT1DForward/)中提到的正演函数：
+
+其中，MT1DForward函数即[“大地电磁一维正演”](https://cocklebur0924.github.io/2022/03/25/MT1D_Forward/)中提到的正演函数：
+
 ```matlab
 function [apparentRho,Phase] = MT1DForward(rho,h,f)  
-% Notes goes here: https://cocklebur0924.github.io/2022/03/25/MT1DForward/
+% Notes goes here: https://cocklebur0924.github.io/2022/03/25/MT1D_Forward/
 nFreqs = length(f);
 nLayer = length(rho);
 
