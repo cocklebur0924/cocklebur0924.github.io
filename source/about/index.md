@@ -9,6 +9,8 @@ date: 2022-03-17 23:30:00
 
 #### My graduate major is Magnetotelluric Inversion.
 
+#### I’m currently learning FWI(Full-Waveform Inversion).
+
 #### I will record something here...
 
 #### Welcome come to here~
