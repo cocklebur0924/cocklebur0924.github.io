@@ -20,7 +20,7 @@ $$ \frac{\alpha^2u}{\alpha t^2}=v^2(\frac{\alpha^2u}{\alpha x^2}+\frac{\alpha^2u
 
 令$u_{i,j}^k=u(idx,jdz,kdt)$,即在空间中选定合适的$dx,dz$为步长的空间进行网格化，而在时间上选定合适的$dt$为步长对时间进行离散化。
 
-下面以时间二阶，空间二阶为例，对$u_{i,j}^{k+1}$ 和 $u_{i,j}^{k-1}$利用Taylor公式展开可以得到：
+下面以时间二阶，空间二阶为例，对$u_{i,j}^{k+1}, u_{i,j}^{k-1}$利用Taylor公式展开可以得到：
 
 $$u_{i,j}^{k+1} = u_{i,j}^{k}+\frac{\alpha u}{\alpha t}\Delta t+\frac{1}{2!}\frac{\alpha^2u}{\alpha t^2}\Delta t^2+\omicron(\Delta t^2) \tag{2}$$
 
@@ -154,7 +154,7 @@ int main()
 	printf("Please enter the accuracy(support：2-16 even number):\n");
 	scanf("%d", &N);
 // 选 择 想 要 输 出 波 场 值 的 时 刻
-	printf("Which moments(ms) wavefield you want to output?\n");
+	printf("Which iter of times do you want to output?\n");
 	//scanf("%d", &wave);
 	vector < int > wave;
 	int  p = 0;
@@ -162,10 +162,10 @@ int main()
 		cin >> p;
 		wave.push_back(p);
 	} while (getchar() != '\n');
-	cout << "---The wave field will be output :---" << endl;
+	cout << "---The wave field will be output at these moments(iter*dt) :---" << endl;
 	for (int p = 0; p < wave.size(); p++)
 	{
-		cout << "when time = " << wave.at(p) << endl;
+		cout << "when time = " << dt*wave.at(p) << endl;
 	}
 
 // 波 场 值 赋 初 值
@@ -321,22 +321,22 @@ subplot(2,2,1)
 imagesc(wavefront_200');
 xlabel('X');
 ylabel('Z');
-title('Wavefront-200ms');
+title('Wavefront-200iter');
 subplot(2,2,2)
 imagesc(wavefront_400');
 xlabel('X');
 ylabel('Z');
-title('Wavefront-400ms');
+title('Wavefront-400iter');
 subplot(2,2,3)
 imagesc(wavefront_600');
 xlabel('X');
 ylabel('Z');
-title('Wavefront-600ms');
+title('Wavefront-600iter');
 subplot(2,2,4)
 imagesc(wavefront_800');
 xlabel('X');
 ylabel('Z');
-title('Wavefront-800ms');
+title('Wavefront-800iter');
 colormap(gray);
 ```
 
