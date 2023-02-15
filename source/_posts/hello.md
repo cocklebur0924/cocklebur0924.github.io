@@ -5,7 +5,11 @@ tags: -hello
 category: hello
 mathjax: false
 ---
-Im a graduate student at Ocean University of China. Welcome to my blog. 
+I am an employee of Geophysical Research & Development Center(ChengDu), BGP INC., CNPC.
+
+I graduated from the Ocean University of China in 2022. 
+
+Welcome to my blog. 
 
 ### About Study
 
