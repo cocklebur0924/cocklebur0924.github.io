@@ -346,8 +346,8 @@ colormap(gray);
 <center><img src=/images/Seismic/05_wavefront.png width=100% /></center>
 <center>波前快照</center>
 
-Notice:由于没有吸收边界，800ms时的波场可以看到明显的边界反射。
-含吸收边界条件的正演程序可参考[地震学习笔记 | 二维声波方程有限差分正演(PML吸收边界) | 2D FDM Seismic Forward（PML）](https://cocklebur0924.github.io/2023/02/27/Seismic06_2D_FDM_Forward(PML))。
+Notice:由于没有吸收边界，800次迭代时的波场可以看到明显的边界反射。
+含吸收边界条件的正演程序可参考[地震学习笔记 | 二维声波方程有限差分正演(吸收边界) | 2D FDM Seismic Forward（ABC）](https://cocklebur0924.github.io/2023/03/07/Seismic06_2D_FDM_Forward_ABC)。
 
 
 ## Reference: 
