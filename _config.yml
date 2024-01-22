@@ -110,5 +110,6 @@ theme: Chic
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/cocklebur0924/cocklebur0924.github.io.git
+  #repo: https://github.com/cocklebur0924/cocklebur0924.github.io.git
+  repo: git@github.com:cocklebur0924/cocklebur0924.github.io.git
   branch: master
