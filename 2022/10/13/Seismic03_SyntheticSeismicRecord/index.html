@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yangwen">
+
+
+    <meta name="subtitle" content="Cocklebur's Blog">
+
+
+
+
+<title>地震学习笔记 | 一维合成地震记录 | Matlab代码 | Cocklebur&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/image/cocklebur.jpeg">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Cocklebur&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Cocklebur&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">地震学习笔记 | 一维合成地震记录 | Matlab代码</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Yangwen</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 13, 2022&nbsp;&nbsp;21:14:10</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Study/">Study</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="褶积公式"><a href="#褶积公式" class="headerlink" title="褶积公式"></a>褶积公式</h3><p>1952年，Enders Robinson，Norbert Wiener，Norman Levinson与Paul Samuelson等提出了反射地震褶积模型的概念。$^{[1]}$</p>
+<p>反射地震褶积模型认为，地震记录$s(n)$是震源地震子波$w(t)$和地下地层反射系数$r(t)$褶积的结果。其数学表达式，即褶积公式为：$^{[1][2]}$</p>
+<script type="math/tex; mode=display">s(n)=w(n)*r(n)</script><p>其中*代表褶积运算的符号。</p>
+<p>下面利用褶积公式合成一维地震记录：</p>
+<p>设计反射系数$r(n) (n=500)$，<br>其中$r(100)=0.5,r(200)=-0.6,r(300)=0.7,r(400)=0.3,r(500)=0.4$，其余为0。</p>
+<p>地震子波选用雷克子波。</p>
+<h3 id="合成地震记录的Matlab实现"><a href="#合成地震记录的Matlab实现" class="headerlink" title="合成地震记录的Matlab实现"></a>合成地震记录的Matlab实现</h3><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%% Synthetic Seismic Record</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[]</span> = <span class="title">SyntheticSeismic</span><span class="params">()</span></span></span><br><span class="line">clc;</span><br><span class="line">clear;</span><br><span class="line">close all;</span><br><span class="line"><span class="comment">%% Reflection Coefficient</span></span><br><span class="line">ref=<span class="built_in">zeros</span>(<span class="number">1</span>,<span class="number">500</span>);</span><br><span class="line">ref(<span class="number">100</span>)=<span class="number">0.5</span>;</span><br><span class="line">ref(<span class="number">200</span>)=<span class="number">-0.6</span>;</span><br><span class="line">ref(<span class="number">300</span>)=<span class="number">0.7</span>;</span><br><span class="line">ref(<span class="number">400</span>)=<span class="number">0.3</span>;</span><br><span class="line">ref(<span class="number">500</span>)=<span class="number">0.4</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">%% Ricker Wavele</span></span><br><span class="line">[wavelet_zero,timez] = Ricker_zero(<span class="number">20</span>,<span class="number">0.002</span>,<span class="number">100</span>,<span class="number">3</span>); <span class="comment">%中心频率20Hz,子波宽度r=3</span></span><br><span class="line">[wavelet_min,timem] = Ricker_minimum(<span class="number">20</span>,<span class="number">0.002</span>,<span class="number">100</span>,<span class="number">3</span>); <span class="comment">%中心频率20Hz,子波宽度r=3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%% Calculate Synthetic Seismic Record</span></span><br><span class="line">SeisRecord_zero = conv(ref,wavelet_zero);</span><br><span class="line">SeisRecord_min = conv(ref,wavelet_min);</span><br><span class="line"></span><br><span class="line"><span class="comment">%% plot </span></span><br><span class="line">x1=<span class="number">1</span>:<span class="built_in">length</span>(ref)+<span class="built_in">length</span>(wavelet_zero)<span class="number">-1</span>;</span><br><span class="line">x2=<span class="number">1</span>:<span class="built_in">length</span>(ref)+<span class="built_in">length</span>(wavelet_min)<span class="number">-1</span>;</span><br><span class="line">subplot(<span class="number">4</span>,<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line"><span class="built_in">plot</span>(timez,wavelet_zero,<span class="string">&#x27;b&#x27;</span>,timem,wavelet_min,<span class="string">&#x27;r:&#x27;</span>,<span class="string">&#x27;linewidth&#x27;</span>,<span class="number">2.0</span>);</span><br><span class="line">title(<span class="string">&#x27;Ricker Wavelet&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">14</span>);</span><br><span class="line"><span class="built_in">legend</span>(<span class="string">&#x27;Ricker-zero&#x27;</span>,<span class="string">&#x27;Ricker-minimum&#x27;</span>);</span><br><span class="line">set(gca,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;XLim&#x27;</span>,[<span class="number">0</span> <span class="number">0.1</span>],<span class="string">&#x27;YLim&#x27;</span>,[<span class="number">-1.0</span> <span class="number">1.0</span>]);</span><br><span class="line">xlabel(<span class="string">&#x27;Time(s)&#x27;</span>),ylabel(<span class="string">&#x27;Amplitude&#x27;</span>)</span><br><span class="line"><span class="built_in">hold</span> on</span><br><span class="line">subplot(<span class="number">4</span>,<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">x3=<span class="number">1</span>:<span class="built_in">length</span>(ref);</span><br><span class="line">stem(x3,ref,<span class="string">&#x27;k&#x27;</span>);xlabel(<span class="string">&#x27;depth&#x27;</span>),ylabel(<span class="string">&#x27;value&#x27;</span>)</span><br><span class="line">title(<span class="string">&#x27;Reflection Coefficient&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">14</span>);</span><br><span class="line">axis([-<span class="built_in">inf</span> <span class="built_in">inf</span> <span class="number">-1</span>,<span class="number">1</span>]);</span><br><span class="line">set(gca,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">12</span>);</span><br><span class="line">grid on;</span><br><span class="line"><span class="built_in">hold</span> on</span><br><span class="line">subplot(<span class="number">4</span>,<span class="number">1</span>,[<span class="number">3</span>,<span class="number">4</span>])</span><br><span class="line"><span class="built_in">plot</span>(x1,SeisRecord_zero,<span class="string">&#x27;b&#x27;</span>,x2,SeisRecord_min,<span class="string">&#x27;r:&#x27;</span>,<span class="string">&#x27;linewidth&#x27;</span>,<span class="number">2.0</span>);</span><br><span class="line"><span class="comment">%title(&#x27;Seismic Record&#x27;,&#x27;FontSize&#x27;,14);</span></span><br><span class="line">text(<span class="number">50</span>,<span class="number">0.6</span>,<span class="string">&#x27;Seismic Record&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">15</span>);</span><br><span class="line"><span class="built_in">legend</span>(<span class="string">&#x27;Record(Ricker-zero)&#x27;</span>,<span class="string">&#x27;Record(Ricker-minimum)&#x27;</span>);</span><br><span class="line">set(gca,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;YLim&#x27;</span>,[<span class="number">-0.75</span> <span class="number">0.75</span>]);</span><br><span class="line">xlabel(<span class="string">&#x27;sampling sequence&#x27;</span>),ylabel(<span class="string">&#x27;Amplitude&#x27;</span>)</span><br><span class="line">set(gcf,<span class="string">&#x27;unit&#x27;</span>,<span class="string">&#x27;normalized&#x27;</span>,<span class="string">&#x27;position&#x27;</span>,[<span class="number">0.1</span>,<span class="number">0.0</span>,<span class="number">0.5</span>,<span class="number">0.9</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">%% </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[wavelet_zero,time]</span>=<span class="title">Ricker_zero</span><span class="params">(freqs,dt,nt,r)</span></span></span><br><span class="line"><span class="comment">% freqs:主频 </span></span><br><span class="line"><span class="comment">% dt:采样时间间隔</span></span><br><span class="line"><span class="comment">% nt:采样点数</span></span><br><span class="line"><span class="comment">% r: 子波宽度</span></span><br><span class="line">tmin=<span class="number">0</span>;</span><br><span class="line">tmax=dt*nt;</span><br><span class="line">time=tmin:dt:tmax;</span><br><span class="line">wavelet_zero=<span class="built_in">exp</span>(-(<span class="number">2</span>*<span class="built_in">pi</span>*freqs/r)^<span class="number">2</span>*time.^<span class="number">2</span>).*<span class="built_in">cos</span>(<span class="number">2</span>*<span class="built_in">pi</span>*freqs.*time);</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[wavelet_min,time]</span>=<span class="title">Ricker_minimum</span><span class="params">(freqs,dt,nt,r)</span></span></span><br><span class="line"><span class="comment">% freqs:主频 </span></span><br><span class="line"><span class="comment">% dt:采样时间间隔</span></span><br><span class="line"><span class="comment">% nt:采样点数</span></span><br><span class="line"><span class="comment">% r: 子波宽度</span></span><br><span class="line">tmin=<span class="number">0</span>;</span><br><span class="line">tmax=dt*nt;</span><br><span class="line">time=tmin:dt:tmax;</span><br><span class="line">wavelet_min=<span class="built_in">exp</span>(-(<span class="number">2</span>*<span class="built_in">pi</span>*freqs/r)^<span class="number">2</span>*time.^<span class="number">2</span>).*<span class="built_in">sin</span>(<span class="number">2</span>*<span class="built_in">pi</span>*freqs.*time);</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<center><img src=/images/Seismic/SeismicRecord.png width=80% /></center>
+<center>一维合成地震记录</center>
+
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1A4411V7DS?p=15&amp;vd_source=9a85818443b28af8b61e2429ac4bc07c">Blibli长江大学：地震勘探原理公开课—什么是合成地震记录</a></p>
+<p>[2] 陆基孟，地震勘探原理，第三版</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Yangwen</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cocklebur0924.github.io/2022/10/13/Seismic03_SyntheticSeismicRecord/">https://cocklebur0924.github.io/2022/10/13/Seismic03_SyntheticSeismicRecord/</a></span>
+                    </p>
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Study/"># Study</a>
+                    
+                        <a href="/tags/Seismic/"># Seismic</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/10/31/Seismic04_Filtering/">地震学习笔记 | 一个简单的低通滤波器 | Matlab代码</a>
+            
+            
+            <a class="next" rel="next" href="/2022/10/11/Seismic02_RickerWavelet/">地震学习笔记 | 雷克子波的认识 | Matlab代码</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Yangwen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+
+    </div>
+</body>
+
+</html>

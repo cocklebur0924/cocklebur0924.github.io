@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yangwen">
+
+
+    <meta name="subtitle" content="Cocklebur's Blog">
+
+
+
+
+<title>Simulated Anealling(SA)大地电磁一维反演 | 模拟退火算法 | Cocklebur&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/image/cocklebur.jpeg">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Cocklebur&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Cocklebur&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Simulated Anealling(SA)大地电磁一维反演 | 模拟退火算法</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Yangwen</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 10, 2022&nbsp;&nbsp;23:00:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Study/">Study</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>本系列为大地电磁一维反演的一些matlab程序，搬运自<a target="_blank" rel="noopener" href="https://github.com/rhezazz/1D-Magnetotelluric-Inversion">Mohammad Rheza Zamani的Github项目：1D-Magnetotelluric-Inversion</a> ，共包括以下五种算法：</p>
+<blockquote>
+<p>1D-Magnetotelluric-Inversion</p>
+<ol>
+<li>MT FA：<a href="https://cocklebur0924.github.io/2022/04/10/MT1Dinv_Firefly/">萤火虫算法(Firefly Algorithm，FA)</a></li>
+<li>MT BA：<a href="https://cocklebur0924.github.io/2022/04/10/MT1Dinv_Bat/">蝙蝠算法(Bat algorithm，BA)</a></li>
+<li>MT PSO：<a href="https://cocklebur0924.github.io/2022/04/10/MT1Dinv_PSO/">粒子群优化算法(Particle Swarm Optimization，PSO)</a></li>
+<li>MT SA：<a href="https://cocklebur0924.github.io/2022/04/10/MT1Dinv_SA/">模拟退火算法(Simulated Anealling，SA)</a></li>
+<li>MT VFSA：<a href="https://cocklebur0924.github.io/2022/04/10/MT1Dinv_VFSA/">非常快速模拟退火算法(Very Fast Simulated Annealing，VFSA)</a></li>
+</ol>
+</blockquote>
+<p>本节为<code>模拟退火算法 MT1D Inversion matlab代码</code></p>
+<h3 id="模拟退火算法-SA-简介"><a href="#模拟退火算法-SA-简介" class="headerlink" title="模拟退火算法(SA)简介"></a>模拟退火算法(SA)简介</h3><p>模拟退火算法(Simulated Annealing，SA)是基于 Monte-Carlo 迭代求解策略的一种随机寻优算法，其出发点是基于物理中固体物质的退火过程与一般组合优化问题之间的相似性。该算法最早的思想是由N. Metropolis. et al.于1953年提出。1983年,S. Kirkpatrick等成功地将退火思想引入到组合优化领域$^{[1]}$。</p>
+<p>模拟退火算法从某一较高初温出发，伴随温度参数的不断下降,结合一定的概率突跳特性在解空间中随机寻找目标函数的全局最优解，即在局部最优解处能概率性地跳出并最终趋于全局最优。这里的“一定的概率”的计算参考了金属冶炼的退火过程，这也是模拟退火算法名称的由来$^{[1]}$。</p>
+<h3 id="SA-大地电磁一维反演matlab代码"><a href="#SA-大地电磁一维反演matlab代码" class="headerlink" title="SA 大地电磁一维反演matlab代码"></a>SA 大地电磁一维反演matlab代码</h3><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%Program pemodelan inversi kurva sounding MT 1-D dengan</span></span><br><span class="line"><span class="comment">%menggunakan algoritma Simulated Anealling</span></span><br><span class="line"><span class="comment">%Mohammad Rheza Zamani</span></span><br><span class="line">tic</span><br><span class="line">clear all;</span><br><span class="line">clc;</span><br><span class="line"><span class="comment">%Data sintetik</span></span><br><span class="line">R = [<span class="number">100</span> <span class="number">1000</span> <span class="number">10</span>];</span><br><span class="line">thk = [<span class="number">500</span> <span class="number">1500</span>];</span><br><span class="line">freq = <span class="built_in">logspace</span>(<span class="number">-3</span>,<span class="number">3</span>,<span class="number">50</span>);</span><br><span class="line">T = <span class="number">1.</span>/freq;</span><br><span class="line">[app_sin, phase_sin] = modelMT(R, thk ,T);</span><br><span class="line"></span><br><span class="line"><span class="comment">%Definisi ruang model </span></span><br><span class="line">nlayer = <span class="number">3</span>; <span class="comment">%Jumlah lapisan </span></span><br><span class="line">nitr = <span class="number">300</span>; <span class="comment">%Jumlah iterasi </span></span><br><span class="line"><span class="comment">%Ruang pencarian diatur sebesar 5 kali dari model data  sintetik</span></span><br><span class="line"><span class="comment">%Batas bawah pencarian nilai resistivitas</span></span><br><span class="line">LBR = [<span class="number">1</span> <span class="number">1</span> <span class="number">1</span>];</span><br><span class="line"><span class="comment">%Batas atas pencarian nilai resistivitas</span></span><br><span class="line">UBR = [<span class="number">200</span> <span class="number">2000</span> <span class="number">20</span>];</span><br><span class="line"><span class="comment">%Batas bawah pencarian nilai ketebalan</span></span><br><span class="line">LBT = [<span class="number">1</span> <span class="number">1</span>];</span><br><span class="line"><span class="comment">%Batas atas pencarian nilai resistivitas</span></span><br><span class="line">UBT = [<span class="number">1000</span> <span class="number">3000</span>];</span><br><span class="line">Temp = <span class="number">5</span>;</span><br><span class="line">dec = <span class="number">0.05</span>;</span><br><span class="line"><span class="comment">%Membuat model awal acak</span></span><br><span class="line">rho1(<span class="number">1</span> , :) = LBR + <span class="built_in">rand</span>*(UBR - LBR);</span><br><span class="line">thick1(<span class="number">1</span>, :) = LBT + <span class="built_in">rand</span>*(UBT - LBT);</span><br><span class="line"><span class="comment">%Menghitung misfit, apparent resistivity, dan phase model awal</span></span><br><span class="line">[apparentResistivity1, phase1]=modelMT(rho1(<span class="number">1</span>,:),thick1(<span class="number">1</span>,:),T);</span><br><span class="line">app_mod1(<span class="number">1</span>,:)=apparentResistivity1;</span><br><span class="line">phase_mod1(<span class="number">1</span>,:)=phase1;</span><br><span class="line">     </span><br><span class="line">[misfit1]=misfitMT(app_sin,phase_sin,app_mod1(<span class="number">1</span>,:),phase_mod1(<span class="number">1</span>,:));</span><br><span class="line">E1=misfit1;</span><br><span class="line"><span class="keyword">for</span> itr = <span class="number">1</span> : nitr</span><br><span class="line">    rho2(<span class="number">1</span> , :) = LBR + <span class="built_in">rand</span>*(UBR - LBR);</span><br><span class="line">    thick2(<span class="number">1</span>, :) = LBT + <span class="built_in">rand</span>*(UBT - LBT);</span><br><span class="line">    [apparentResistivity2, phase2]=modelMT(rho2(<span class="number">1</span>,:),thick2(<span class="number">1</span>,:),T);</span><br><span class="line">    app_mod2(<span class="number">1</span>,:)=apparentResistivity2;</span><br><span class="line">    phase_mod2(<span class="number">1</span>,:)=phase2;</span><br><span class="line">    [misfit2]=misfitMT(app_sin,phase_sin,app_mod2(<span class="number">1</span>,:),phase_mod2(<span class="number">1</span>,:));</span><br><span class="line">    E2=misfit2;</span><br><span class="line">    delta_E = E2 -E1;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> delta_E &lt; <span class="number">0</span></span><br><span class="line">        rho1 = rho2;</span><br><span class="line">        thick1 = thick2;</span><br><span class="line">         E1 = E2;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        P = <span class="built_in">exp</span>((-delta_E)/Temp);</span><br><span class="line">        <span class="keyword">if</span>  P &gt;= <span class="built_in">rand</span></span><br><span class="line">           rho1 = rho2;</span><br><span class="line">           thick1 = thick2;</span><br><span class="line">           E1 = E2;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    [apparentResistivity_new, phase_new]=modelMT(rho1(<span class="number">1</span>,:),thick1(<span class="number">1</span>,:),T);</span><br><span class="line">    Egen(itr)=E1;</span><br><span class="line">    Temp = Temp*(<span class="number">1</span>-dec);</span><br><span class="line">    Temperature(itr) = Temp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">%Persiapan Ploting</span></span><br><span class="line">    rho_plot = [<span class="number">0</span> R];</span><br><span class="line">    thk_plot = [<span class="number">0</span> cumsum(thk) <span class="built_in">max</span>(thk)*<span class="number">10000</span>];</span><br><span class="line">    rhomod_plot = [<span class="number">0</span> rho1];</span><br><span class="line">    thkmod_plot = [<span class="number">0</span> cumsum(thick1) <span class="built_in">max</span>(thick1)*<span class="number">10000</span>];</span><br><span class="line">    </span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">toc</span><br><span class="line">    <span class="comment">%Plotting</span></span><br><span class="line">    <span class="built_in">figure</span>(<span class="number">1</span>)</span><br><span class="line">    subplot(<span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>)</span><br><span class="line">    loglog(T,app_sin,<span class="string">&#x27;.b&#x27;</span>,T,apparentResistivity_new,<span class="string">&#x27;r&#x27;</span>,<span class="string">&#x27;MarkerSize&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;LineWidth&#x27;</span>,<span class="number">1.5</span>);</span><br><span class="line">    axis([<span class="number">10</span>^<span class="number">-3</span> <span class="number">10</span>^<span class="number">3</span> <span class="number">1</span> <span class="number">10</span>^<span class="number">3</span>]);</span><br><span class="line">    <span class="built_in">legend</span>(&#123;<span class="string">&#x27;Synthetic Data&#x27;</span>,<span class="string">&#x27;Calculated Data&#x27;</span>&#125;,<span class="string">&#x27;EdgeColor&#x27;</span>,<span class="string">&#x27;none&#x27;</span>,<span class="string">&#x27;Color&#x27;</span>,<span class="string">&#x27;none&#x27;</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    xlabel(<span class="string">&#x27;Periods (s)&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    ylabel(<span class="string">&#x27;App. Resistivity (Ohm.m)&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    title([<span class="string">&#x27;\bf \fontsize&#123;10&#125;\fontname&#123;Times&#125;Period (s) vs Apparent Resistivity (ohm.m)  || Misfit : &#x27;</span>, num2str(Egen(itr)),<span class="string">&#x27; || iteration : &#x27;</span>, num2str(itr)]);</span><br><span class="line">    grid on</span><br><span class="line">    </span><br><span class="line">    subplot(<span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">    loglog(T,phase_sin,<span class="string">&#x27;.b&#x27;</span>,T,phase_new,<span class="string">&#x27;r&#x27;</span>,<span class="string">&#x27;MarkerSize&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;LineWidth&#x27;</span>,<span class="number">1.5</span>);</span><br><span class="line">    axis([<span class="number">10</span>^<span class="number">-3</span> <span class="number">10</span>^<span class="number">3</span> <span class="number">0</span> <span class="number">90</span>]);</span><br><span class="line">    set(gca, <span class="string">&#x27;YScale&#x27;</span>, <span class="string">&#x27;linear&#x27;</span>);</span><br><span class="line">    <span class="built_in">legend</span>(&#123;<span class="string">&#x27;Synthetic Data&#x27;</span>,<span class="string">&#x27;Calculated Data&#x27;</span>&#125;,<span class="string">&#x27;EdgeColor&#x27;</span>,<span class="string">&#x27;none&#x27;</span>,<span class="string">&#x27;Color&#x27;</span>,<span class="string">&#x27;none&#x27;</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    xlabel(<span class="string">&#x27;Periods (s)&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    ylabel(<span class="string">&#x27;Phase (deg)&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    title([<span class="string">&#x27;\bf \fontsize&#123;10&#125;\fontname&#123;Times&#125;Period (s) vs Phase (deg)  || Misfit : &#x27;</span>, num2str(Egen(itr)),<span class="string">&#x27; || iteration : &#x27;</span>, num2str(itr)]);</span><br><span class="line">    grid on</span><br><span class="line">    </span><br><span class="line">    subplot(<span class="number">2</span>, <span class="number">2</span>, [<span class="number">2</span> <span class="number">4</span>])</span><br><span class="line">    stairs(rho_plot,thk_plot,<span class="string">&#x27;--b&#x27;</span>,<span class="string">&#x27;Linewidth&#x27;</span>,<span class="number">1.5</span>);</span><br><span class="line">    <span class="built_in">hold</span> on</span><br><span class="line">    stairs(rhomod_plot ,thkmod_plot,<span class="string">&#x27;-r&#x27;</span>,<span class="string">&#x27;Linewidth&#x27;</span>,<span class="number">2</span>);</span><br><span class="line">    <span class="built_in">hold</span> off</span><br><span class="line">     <span class="built_in">legend</span>(&#123;<span class="string">&#x27;Synthetic Model&#x27;</span>,<span class="string">&#x27;Calculated Model&#x27;</span>&#125;,<span class="string">&#x27;EdgeColor&#x27;</span>,<span class="string">&#x27;none&#x27;</span>,<span class="string">&#x27;Color&#x27;</span>,<span class="string">&#x27;none&#x27;</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>,<span class="string">&#x27;Location&#x27;</span>,<span class="string">&#x27;SouthEast&#x27;</span>);</span><br><span class="line">    axis([<span class="number">1</span> <span class="number">10</span>^<span class="number">4</span> <span class="number">0</span> <span class="number">5000</span>]);</span><br><span class="line">    xlabel(<span class="string">&#x27;Resistivity (Ohm.m)&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    ylabel(<span class="string">&#x27;Depth (m)&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    title([<span class="string">&#x27;\bf \fontsize&#123;10&#125;\fontname&#123;Times&#125;Model&#x27;</span>]);</span><br><span class="line">    subtitle([<span class="string">&#x27;\rho_&#123;1&#125; = &#x27;</span>,num2str(rho1(<span class="number">1</span>)),<span class="string">&#x27; || \rho_&#123;2&#125; = &#x27;</span>,num2str(rho1(<span class="number">2</span>)),<span class="string">&#x27; || \rho_&#123;3&#125; = &#x27;</span>,num2str(rho1(<span class="number">3</span>)),<span class="string">&#x27; || thick_&#123;1&#125; = &#x27;</span>,num2str(thick1(<span class="number">1</span>)),<span class="string">&#x27; || thick_&#123;2&#125; = &#x27;</span>,num2str(thick1(<span class="number">2</span>))],<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;bold&#x27;</span>)</span><br><span class="line">    set(gca,<span class="string">&#x27;YDir&#x27;</span>,<span class="string">&#x27;Reverse&#x27;</span>);</span><br><span class="line">    set(gca, <span class="string">&#x27;XScale&#x27;</span>, <span class="string">&#x27;log&#x27;</span>);</span><br><span class="line">    set(gcf, <span class="string">&#x27;Position&#x27;</span>, get(<span class="number">0</span>, <span class="string">&#x27;Screensize&#x27;</span>));</span><br><span class="line">    grid on</span><br><span class="line"></span><br><span class="line">    <span class="comment">%plot misfit</span></span><br><span class="line">    <span class="built_in">figure</span>(<span class="number">2</span>)</span><br><span class="line">    <span class="built_in">plot</span>(<span class="number">1</span>:nitr,Egen,<span class="string">&#x27;r&#x27;</span>,<span class="string">&#x27;Linewidth&#x27;</span>,<span class="number">1.5</span>)</span><br><span class="line">    xlabel(<span class="string">&#x27;Iteration Number&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">10</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    ylabel(<span class="string">&#x27;RSME&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">10</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    title(<span class="string">&#x27;\bf \fontsize&#123;12&#125; Grafik Misfit &#x27;</span>);</span><br><span class="line">    set(gcf, <span class="string">&#x27;Position&#x27;</span>, get(<span class="number">0</span>, <span class="string">&#x27;Screensize&#x27;</span>));</span><br><span class="line">    grid on</span><br><span class="line"></span><br><span class="line">    <span class="comment">%Plot Temperature</span></span><br><span class="line">    <span class="built_in">figure</span>(<span class="number">3</span>)</span><br><span class="line">    <span class="built_in">plot</span>(<span class="number">1</span>:nitr,Temperature,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;Linewidth&#x27;</span>,<span class="number">1.5</span>)</span><br><span class="line">    xlabel(<span class="string">&#x27;Iteration Number&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">10</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    ylabel(<span class="string">&#x27;Temperature&#x27;</span>,<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">10</span>,<span class="string">&#x27;FontWeight&#x27;</span>,<span class="string">&#x27;Bold&#x27;</span>);</span><br><span class="line">    title(<span class="string">&#x27;\bf \fontsize&#123;12&#125; Grafik Penurunan Temperature &#x27;</span>);</span><br><span class="line">    set(gcf, <span class="string">&#x27;Position&#x27;</span>, get(<span class="number">0</span>, <span class="string">&#x27;Screensize&#x27;</span>));</span><br><span class="line">    grid on</span><br></pre></td></tr></table></figure>
+<p>其中，子函数modelMT与misfitMT与<a href="https://cocklebur0924.github.io/2022/04/10/MT1Dinv_Firefly/">萤火虫算法</a>一致。</p>
+<h4 id="SA-反演结果"><a href="#SA-反演结果" class="headerlink" title="SA 反演结果"></a>SA 反演结果</h4><center><img src=/images/PictureInsert/SA.png width=100% /></center>
+<center>左:反演模型响应对比；右:反演结果对比</center>
+
+<center><img src=/images/PictureInsert/SAmisfit.png width=60%/></center>
+<center>SA反演过程中RMSE变化曲线</center>
+
+<center><img src=/images/PictureInsert/SAtemperature.png width=60%/></center>
+<center>SA反演过程中Temperature变化曲线</center>
+
+<h3 id="The-end"><a href="#The-end" class="headerlink" title="The end"></a>The end</h3><h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/266874840">知乎回答：模拟退火算法详解</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://github.com/rhezazz/1D-Magnetotelluric-Inversion/tree/main/MT%20SA">Mohammad Rheza Zamani的Github项目:1D-Magnetotelluric-Inversion之模拟退火算法</a></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Yangwen</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cocklebur0924.github.io/2022/04/10/MT1Dinv_SA/">https://cocklebur0924.github.io/2022/04/10/MT1Dinv_SA/</a></span>
+                    </p>
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Study/"># Study</a>
+                    
+                        <a href="/tags/MT/"># MT</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/04/10/MT1Dinv_VFSA/">Very Fast Simulated Annealing(VFSA)大地电磁一维反演 | 非常快速模拟退火算法</a>
+            
+            
+            <a class="next" rel="next" href="/2022/04/10/MT1Dinv_PSO/">Particle Swarm Optimization(PSO)大地电磁一维反演 | 粒子群优化算法</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Yangwen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+
+    </div>
+</body>
+
+</html>

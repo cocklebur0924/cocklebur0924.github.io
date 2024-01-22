@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yangwen">
+
+
+    <meta name="subtitle" content="Cocklebur's Blog">
+
+
+
+
+<title>地震学习笔记 | 观测系统 | Cocklebur&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/image/cocklebur.jpeg">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Cocklebur&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Cocklebur&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">地震学习笔记 | 观测系统</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Yangwen</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 9, 2022&nbsp;&nbsp;22:17:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Study/">Study</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><em>本文大部分内容整理自<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1A4411V7DS?p=32&amp;vd_source=9a85818443b28af8b61e2429ac4bc07c">Blibli长江大学：地震勘探原理公开课</a></em></p>
+<p>观测系统是指地震波的<strong>激发点</strong>和<strong>接收点</strong>（即炮点和检波点）的相对位置关系。</p>
+<h2 id="观测系统的分类"><a href="#观测系统的分类" class="headerlink" title="观测系统的分类"></a>观测系统的分类</h2><h4 id="按维数分为："><a href="#按维数分为：" class="headerlink" title="按维数分为："></a>按维数分为：</h4><p>1D观测系统：特指地震测井或零偏移距VSP（Vertical Seismic Profile），在井口激发，在井中接收地震波</p>
+<p>2D观测系统：在一点激发，在激发点和接收点的连线上接收地震波（纵测线）</p>
+<p>3D观测系统：在一点激发，在一个面上接收地震波</p>
+<p>4D观测系统：在同一个工区，不同时期进行三维地震勘探，不同时期三维观测系统相近，以达到监测地下油藏开采变化的目的</p>
+<h4 id="按照地震波类型分为："><a href="#按照地震波类型分为：" class="headerlink" title="按照地震波类型分为："></a>按照地震波类型分为：</h4><p><strong>反射波观测系统</strong></p>
+<p>折射波观测系统</p>
+<p>三分量观测系统</p>
+<h4 id="按照对地下反射点的观测次数分为；"><a href="#按照对地下反射点的观测次数分为；" class="headerlink" title="按照对地下反射点的观测次数分为；"></a>按照对地下反射点的观测次数分为；</h4><p>单次覆盖观测系统：对地下反射点只观测一次，设计激发点和接收点空间位置，可以对地下反射界面连续观测</p>
+<p><strong>多次覆盖观测系统</strong>：设计激发点和接收点空间位置，可以对地下反射点进行多次观测，观测的次数叫覆盖次数</p>
+<h2 id="观测系统设计中常用参数-概念"><a href="#观测系统设计中常用参数-概念" class="headerlink" title="观测系统设计中常用参数/概念"></a>观测系统设计中常用参数/概念</h2><ol>
+<li><p>道间距：相邻两个接收点之间的距离</p>
+</li>
+<li><p>炮检距：激发点到接收点之间的距离</p>
+</li>
+<li><p>最大炮检距：炮点与最远一道（即最远的一个检波器）之间的距离，最大炮检距应该大于等于最深目的层的深度</p>
+</li>
+<li><p>偏移距：通常指最小偏移距，即第一个接收点到激发点的距离，偏移距应该小于最浅的目的层深度</p>
+</li>
+<li><p>炮间距：相邻两个激发点之间的距离</p>
+</li>
+<li><p>反射点距：地下反射点之间的距离</p>
+</li>
+<li><p>排列长度：最近的接收点到最远的接收点之间的长度，根据勘探的最深目的层的深度来决定排列长度</p>
+</li>
+<li><p>CMP：Common Middle Point 共中心点</p>
+</li>
+<li><p>CDP：Common Depth Point 共深度点</p>
+</li>
+<li><p>CRP：Common Reflection Point 共反射点</p>
+</li>
+<li><p>CMP,CDP,CRP之间的关系：</p>
+<p>在反射界面水平的情况下，共反射点CRP或共深度点CDP在地面的投影刚好是共中心点CMP（炮点和检波点的中点）。如果地下界面是倾斜的，CMP和CRP就有较大的偏差（也有一种说法是：在界面倾斜时，不存在CDP/CRP）。在野外很难设计共反射点的观测系统，实际工作中还是采用共中心点多次覆盖的观测系统，至于倾斜界面引起的偏移等问题，将在地震资料处理中通过地震偏移等方法加以解决。</p>
+</li>
+</ol>
+<center><img src=/images/Seismic/CMP.png width=50% /></center>
+<center>CMP,CDP,CRP之间的关系</center>
+
+
+<p><strong>移动道数</strong>：</p>
+<p>要实现共中心点（CMP，Common Middle Point）多次覆盖观测系统，就必须合理地挪动炮点和接收点。<br>野外施工中，每激发一次，排列和激发点向前移动的道间距数$d$为：</p>
+<script type="math/tex; mode=display">d=\frac{NS}{2n}</script><p>式中，$N$为排列中的接收道数，$n$为覆盖次数，$S$在一端激发时等于1，两端激发时等于2。</p>
+<h2 id="观测系统的图示方法"><a href="#观测系统的图示方法" class="headerlink" title="观测系统的图示方法"></a>观测系统的图示方法</h2><h4 id="时距平面法"><a href="#时距平面法" class="headerlink" title="时距平面法"></a>时距平面法</h4><p>……</p>
+<h4 id="综合平面法（适合描述2D观测系统）"><a href="#综合平面法（适合描述2D观测系统）" class="headerlink" title="综合平面法（适合描述2D观测系统）"></a>综合平面法（适合描述2D观测系统）</h4><p>假设地下界面是水平的，可以用一条和地面测线成45°夹角的斜线表示共炮点线，这条斜线在测线上的投影段就是地下反射段；这条斜线末端画一条垂线与测线相交，相交点就是最大炮检距；在斜线上任意一点画一条垂线与测线相交，相交点就是对应的地面接收点。</p>
+<p>按照纵测线多次覆盖观测系统中炮点和覆盖次数的关系，间隔一个炮检距后，第二炮激发，再画一条45°的斜线，重复上述过程，就可以画出多次覆盖的观测系统图。 </p>
+<center><img src=/images/Seismic/02.png width=60% /></center>
+<center>综合平面图示法</center>
+
+<p>在综合平面观测系统图中，垂直测线的直线称为共反射点线，他与共炮点线相交的地震道组成了共反射点道集；平行于测线的线称为共炮检距线，他与共炮点线相交的地震道组成了等炮检距道集；垂直于共炮点线的直线称为共接收点线，他与共炮点线相交的地震道组成了共接收点道集。</p>
+<h4 id="普通平面法（适合描述3D观测系统）"><a href="#普通平面法（适合描述3D观测系统）" class="headerlink" title="普通平面法（适合描述3D观测系统）"></a>普通平面法（适合描述3D观测系统）</h4><p>按照一定比例尺把激发点和接收点如实的画在普通坐标的平面上。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1A4411V7DS?p=32&amp;vd_source=9a85818443b28af8b61e2429ac4bc07c">Blibli长江大学：地震勘探原理公开课—什么是地震观测系统</a></p>
+<p>[2] 陆基孟，地震勘探原理，第三版</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Yangwen</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cocklebur0924.github.io/2022/10/09/Seismic01_Geometry/">https://cocklebur0924.github.io/2022/10/09/Seismic01_Geometry/</a></span>
+                    </p>
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Study/"># Study</a>
+                    
+                        <a href="/tags/Seismic/"># Seismic</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/10/11/Seismic02_RickerWavelet/">地震学习笔记 | 雷克子波的认识 | Matlab代码</a>
+            
+            
+            <a class="next" rel="next" href="/2022/07/30/MT2D_Forward_FEMT2D/">FEMT2D | 大地电磁二维正演 | 有限元Matlab开源程序</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Yangwen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+
+    </div>
+</body>
+
+</html>

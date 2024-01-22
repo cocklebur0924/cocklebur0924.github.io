@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yangwen">
+
+
+    <meta name="subtitle" content="Cocklebur's Blog">
+
+
+
+
+<title>地震学习笔记 | 雷克子波的认识 | Matlab代码 | Cocklebur&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/image/cocklebur.jpeg">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Cocklebur&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Cocklebur&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">地震学习笔记 | 雷克子波的认识 | Matlab代码</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Yangwen</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 11, 2022&nbsp;&nbsp;21:10:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Study/">Study</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="地震子波的概念"><a href="#地震子波的概念" class="headerlink" title="地震子波的概念"></a>地震子波的概念</h3><p>地震子波的概念最早由美国地球物理学家Norman H.Ricker（1896-1980）于1940年提出，他发表在Geophysics上的论文认为，若震源激发的地震波是脉冲信号，向下传播没有变化，那么地震反射波很容易解释地下岩层。Ricker通过地震波动方程推导发现，震源激发的脉冲信号在向下传播的过程中，由于大地的吸收衰减等作用，不再是脉冲信号，而是地震子波。Ricker后来提出了一个理论地震子波，即雷克子波。$^{[1]}$</p>
+<p>以炸药震源为例，来看看地震子波是怎么形成的：炸药爆炸时产生一个延续时间极短的尖脉冲，在爆炸点附近的介质中，以冲击波的形式传播，当爆炸脉冲向外传播一定距离以后，地层产生的弹性形变再向外传播，由于介质对高频成分的吸收，波形发生明显的变化，直到传播了更大的距离以后，波形逐渐稳定，形成一个具有两到三个相位，有一定延续时间的地震波，称为地震子波。$^{[1]}$</p>
+<center><img src=/images/Seismic/Wavelet_Boom.png width=40% /></center>
+<center>爆炸脉冲的变化示意图（参考文献[2]中图2-1-5）</center>
+
+<p>简言之，地震子波是具有确定起始时间（从爆炸时刻开始），有限能量，且有一定延续时间的信号。地震子波是组成地震记录的基本元素。$^{[1][2]}$</p>
+<h3 id="雷克子波公式"><a href="#雷克子波公式" class="headerlink" title="雷克子波公式"></a>雷克子波公式</h3><p>零相位雷克子波：</p>
+<script type="math/tex; mode=display">
+w(t) = e^{(-2\pi f_m r)^2t^2}cos(2\pi f_m t)</script><p>最小相位雷克子波：</p>
+<script type="math/tex; mode=display">
+w(t) = e^{(-2\pi f_m r)^2t^2}sin(2\pi f_m t)</script><p>其中，$f_m$为子波的中心频率，$r$为子波宽度，随着$r$的增大，子波能量后移。</p>
+<h3 id="matlab绘制雷克子波"><a href="#matlab绘制雷克子波" class="headerlink" title="matlab绘制雷克子波"></a>matlab绘制雷克子波</h3><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%% Ricker Wavelet</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[]</span>=<span class="title">RickerWavelet</span><span class="params">()</span></span></span><br><span class="line">clear;</span><br><span class="line">clc;</span><br><span class="line"></span><br><span class="line">[wavelet_zero1,timez1] = Ricker_zero(<span class="number">20</span>,<span class="number">0.002</span>,<span class="number">100</span>,<span class="number">3</span>); <span class="comment">%中心频率20Hz,子波宽度r=3</span></span><br><span class="line">[wavelet_zero2,timez2] = Ricker_zero(<span class="number">10</span>,<span class="number">0.002</span>,<span class="number">100</span>,<span class="number">3</span>); <span class="comment">%中心频率10Hz,子波宽度r=3</span></span><br><span class="line">[wavelet_zero3,timez3] = Ricker_zero(<span class="number">20</span>,<span class="number">0.002</span>,<span class="number">100</span>,<span class="number">5</span>);  <span class="comment">%中心频率20Hz,子波宽度r=5</span></span><br><span class="line"></span><br><span class="line">[wavelet_min1,timem1] = Ricker_minimum(<span class="number">20</span>,<span class="number">0.002</span>,<span class="number">100</span>,<span class="number">3</span>); <span class="comment">%中心频率20Hz,子波宽度r=3</span></span><br><span class="line">[wavelet_min2,timem2] = Ricker_minimum(<span class="number">10</span>,<span class="number">0.002</span>,<span class="number">100</span>,<span class="number">3</span>); <span class="comment">%中心频率10Hz,子波宽度r=3</span></span><br><span class="line">[wavelet_min3,timem3] = Ricker_minimum(<span class="number">20</span>,<span class="number">0.002</span>,<span class="number">100</span>,<span class="number">5</span>); <span class="comment">%中心频率20Hz,子波宽度r=5</span></span><br><span class="line"><span class="built_in">figure</span>(<span class="number">1</span>)</span><br><span class="line"><span class="comment">%不同主频的Ricker Wavelet（零相位）对比</span></span><br><span class="line">subplot(<span class="number">1</span>,<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line"><span class="built_in">plot</span>(timez1,wavelet_zero1,<span class="string">&#x27;b&#x27;</span>,timez2,wavelet_zero2,<span class="string">&#x27;r-&#x27;</span>,<span class="string">&#x27;linewidth&#x27;</span>,<span class="number">2</span>);</span><br><span class="line">set(gca,<span class="string">&#x27;XLim&#x27;</span>,[<span class="number">0</span> <span class="number">0.15</span>],<span class="string">&#x27;YLim&#x27;</span>,[<span class="number">-1.0</span> <span class="number">1.0</span>],<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">13</span>)</span><br><span class="line"><span class="built_in">legend</span>(<span class="string">&#x27;主频20Hz,子波宽度r=3&#x27;</span>,<span class="string">&#x27;主频10Hz,子波宽度r=3&#x27;</span>),title(<span class="string">&#x27;Ricker Wavelet(zero-phase)&#x27;</span>),xlabel(<span class="string">&#x27;Time(s)&#x27;</span>),ylabel(<span class="string">&#x27;Amplitude&#x27;</span>)</span><br><span class="line"><span class="comment">%不同主频的Ricker Wavelet（最小相位）对比</span></span><br><span class="line">subplot(<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">plot</span>(timem1,wavelet_min1,<span class="string">&#x27;b&#x27;</span>,timem2,wavelet_min2,<span class="string">&#x27;r-&#x27;</span>,<span class="string">&#x27;linewidth&#x27;</span>,<span class="number">2</span>);</span><br><span class="line">set(gca,<span class="string">&#x27;XLim&#x27;</span>,[<span class="number">0</span> <span class="number">0.15</span>],<span class="string">&#x27;YLim&#x27;</span>,[<span class="number">-1.0</span> <span class="number">1.0</span>],<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">13</span>)</span><br><span class="line">set(gcf,<span class="string">&#x27;unit&#x27;</span>,<span class="string">&#x27;normalized&#x27;</span>,<span class="string">&#x27;position&#x27;</span>,[<span class="number">0.2</span>,<span class="number">0.2</span>,<span class="number">0.7</span>,<span class="number">0.5</span>]);</span><br><span class="line"><span class="built_in">legend</span>(<span class="string">&#x27;主频20Hz,子波宽度r=3&#x27;</span>,<span class="string">&#x27;主频10Hz,子波宽度r=3&#x27;</span>),title(<span class="string">&#x27;Ricker Wavelet(minimum-phase)&#x27;</span>),xlabel(<span class="string">&#x27;Time(s)&#x27;</span>),ylabel(<span class="string">&#x27;Amplitude&#x27;</span>)</span><br><span class="line"><span class="built_in">hold</span> on</span><br><span class="line"></span><br><span class="line"><span class="built_in">figure</span>(<span class="number">2</span>)</span><br><span class="line"><span class="comment">%不同子波宽度的Ricker Wavelet（零相位）对比 </span></span><br><span class="line">subplot(<span class="number">1</span>,<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line"><span class="built_in">plot</span>(timez1,wavelet_zero1,<span class="string">&#x27;b&#x27;</span>,timez3,wavelet_zero3,<span class="string">&#x27;r-&#x27;</span>,<span class="string">&#x27;linewidth&#x27;</span>,<span class="number">2</span>);</span><br><span class="line">set(gca,<span class="string">&#x27;XLim&#x27;</span>,[<span class="number">0</span> <span class="number">0.15</span>],<span class="string">&#x27;YLim&#x27;</span>,[<span class="number">-1.0</span> <span class="number">1.0</span>],<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">13</span>)</span><br><span class="line"><span class="built_in">legend</span>(<span class="string">&#x27;主频20Hz,子波宽度r=3&#x27;</span>,<span class="string">&#x27;主频20Hz,子波宽度r=5&#x27;</span>),title(<span class="string">&#x27;Ricker Wavelet(zero-phase)&#x27;</span>),xlabel(<span class="string">&#x27;Time(s)&#x27;</span>),ylabel(<span class="string">&#x27;Amplitude&#x27;</span>)</span><br><span class="line"><span class="comment">%不同子波宽度的Ricker Wavelet（最小相位）对比 </span></span><br><span class="line">subplot(<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">plot</span>(timem1,wavelet_min1,<span class="string">&#x27;b&#x27;</span>,timem3,wavelet_min3,<span class="string">&#x27;r-&#x27;</span>,<span class="string">&#x27;linewidth&#x27;</span>,<span class="number">2</span>);</span><br><span class="line">set(gca,<span class="string">&#x27;XLim&#x27;</span>,[<span class="number">0</span> <span class="number">0.15</span>],<span class="string">&#x27;YLim&#x27;</span>,[<span class="number">-1.0</span> <span class="number">1.0</span>],<span class="string">&#x27;FontSize&#x27;</span>,<span class="number">13</span>)</span><br><span class="line">set(gcf,<span class="string">&#x27;unit&#x27;</span>,<span class="string">&#x27;normalized&#x27;</span>,<span class="string">&#x27;position&#x27;</span>,[<span class="number">0.2</span>,<span class="number">0.2</span>,<span class="number">0.7</span>,<span class="number">0.5</span>]);</span><br><span class="line"><span class="built_in">legend</span>(<span class="string">&#x27;主频20Hz,子波宽度r=3&#x27;</span>,<span class="string">&#x27;主频20Hz,子波宽度r=5&#x27;</span>),title(<span class="string">&#x27;Ricker Wavelet(minimum-phase)&#x27;</span>),xlabel(<span class="string">&#x27;Time(s)&#x27;</span>),ylabel(<span class="string">&#x27;Amplitude&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[wavelet_zero,time]</span>=<span class="title">Ricker_zero</span><span class="params">(freqs,dt,nt,r)</span></span></span><br><span class="line"><span class="comment">% freqs:主频 </span></span><br><span class="line"><span class="comment">% dt:采样时间间隔</span></span><br><span class="line"><span class="comment">% nt:采样点数</span></span><br><span class="line"><span class="comment">% r: 子波宽度</span></span><br><span class="line">tmin=<span class="number">0</span>;</span><br><span class="line">tmax=dt*nt;</span><br><span class="line">time=tmin:dt:tmax;</span><br><span class="line">wavelet_zero=<span class="built_in">exp</span>(-(<span class="number">2</span>*<span class="built_in">pi</span>*freqs/r)^<span class="number">2</span>*time.^<span class="number">2</span>).*<span class="built_in">cos</span>(<span class="number">2</span>*<span class="built_in">pi</span>*freqs.*time);</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[wavelet_min,time]</span>=<span class="title">Ricker_minimum</span><span class="params">(freqs,dt,nt,r)</span></span></span><br><span class="line"><span class="comment">% freqs:主频 </span></span><br><span class="line"><span class="comment">% dt:采样时间间隔</span></span><br><span class="line"><span class="comment">% nt:采样点数</span></span><br><span class="line"><span class="comment">% r: 子波宽度</span></span><br><span class="line">tmin=<span class="number">0</span>;</span><br><span class="line">tmax=dt*nt;</span><br><span class="line">time=tmin:dt:tmax;</span><br><span class="line">wavelet_min=<span class="built_in">exp</span>(-(<span class="number">2</span>*<span class="built_in">pi</span>*freqs/r)^<span class="number">2</span>*time.^<span class="number">2</span>).*<span class="built_in">sin</span>(<span class="number">2</span>*<span class="built_in">pi</span>*freqs.*time);</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<center><img src=/images/Seismic/RickerWavelet1.png width=100% /></center>
+<center>不同主频的雷克子波</center>
+
+
+
+<center><img src=/images/Seismic/RickerWavelet2.png width=100% /></center>
+<center>不同子波宽度的雷克子波</center>
+
+
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>[1] <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1A4411V7DS/?p=14&amp;vd_source=9a85818443b28af8b61e2429ac4bc07c">Blibli长江大学：地震勘探原理公开课—什么是地震子波</a></p>
+<p>[2] 陆基孟，地震勘探原理，第三版</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Yangwen</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cocklebur0924.github.io/2022/10/11/Seismic02_RickerWavelet/">https://cocklebur0924.github.io/2022/10/11/Seismic02_RickerWavelet/</a></span>
+                    </p>
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Study/"># Study</a>
+                    
+                        <a href="/tags/Seismic/"># Seismic</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/10/13/Seismic03_SyntheticSeismicRecord/">地震学习笔记 | 一维合成地震记录 | Matlab代码</a>
+            
+            
+            <a class="next" rel="next" href="/2022/10/09/Seismic01_Geometry/">地震学习笔记 | 观测系统</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Yangwen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+
+    </div>
+</body>
+
+</html>

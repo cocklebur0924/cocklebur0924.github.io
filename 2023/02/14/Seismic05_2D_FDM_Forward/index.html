@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yangwen">
+
+
+    <meta name="subtitle" content="Cocklebur's Blog">
+
+
+
+
+<title>地震学习笔记 | 二维声波方程有限差分正演 | 2D FDM Seismic Forward | Cocklebur&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/image/cocklebur.jpeg">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Cocklebur&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Cocklebur&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">地震学习笔记 | 二维声波方程有限差分正演 | 2D FDM Seismic Forward</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Yangwen</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 14, 2023&nbsp;&nbsp;21:24:57</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Study/">Study</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>本文详细推导了二维声波方程有限差分（Finite Difference Method,FDM）格式，提供了空间精度为2-16之间任意偶数阶的c++代码（时间精度2阶）。</p>
+<h2 id="FDM正演公式"><a href="#FDM正演公式" class="headerlink" title="FDM正演公式"></a>FDM正演公式</h2><h3 id="二维声波方程有限差分格式"><a href="#二维声波方程有限差分格式" class="headerlink" title="二维声波方程有限差分格式"></a>二维声波方程有限差分格式</h3><p>在均匀介质中，二维声波方程的表达式为：</p>
+<script type="math/tex; mode=display">\frac{\alpha^2u}{\alpha t^2}=v^2(\frac{\alpha^2u}{\alpha x^2}+\frac{\alpha^2u}{\alpha z^2})+s(t) \tag{1}</script><p>其中，$s(t)$为震源函数，$v$为声波速度。</p>
+<p>令$u_{i,j}^k=u(idx,jdz,kdt)$,即在空间中选定合适的$dx,dz$为步长的空间进行网格化，而在时间上选定合适的$dt$为步长对时间进行离散化。</p>
+<p>下面以时间二阶，空间二阶为例，对$u<em>{i,j}^{k+1}$和$u</em>{i,j}^{k-1}$利用Taylor公式展开可以得到：</p>
+<script type="math/tex; mode=display">u_{i,j}^{k+1} = u_{i,j}^{k}+\frac{\alpha u}{\alpha t}\Delta t+\frac{1}{2!}\frac{\alpha^2u}{\alpha t^2}\Delta t^2+\omicron(\Delta t^2) \tag{2}</script><script type="math/tex; mode=display">u_{i,j}^{k-1} = u_{i,j}^{k}-\frac{\alpha u}{\alpha t}\Delta t+\frac{1}{2!}\frac{\alpha^2u}{\alpha t^2}\Delta t^2+\omicron(\Delta t^2) \tag{3}</script><p>将上面两式相加得到$u$对时间$t$的二阶偏导：</p>
+<script type="math/tex; mode=display">\frac{\alpha^2 u}{\alpha t^2} = \frac{u_{i,j}^{k+1}+u_{i,j}^{k-1}-2u_{i,j}^{k}}{\Delta t^2}  \tag{4}</script><p>同理，可以得到$u$对$x,z$的二阶偏导：</p>
+<script type="math/tex; mode=display">\frac{\alpha^2 u}{\alpha x^2} = \frac{u_{i+1,j}^{k}+u_{i-1,j}^{k}-2u_{i,j}^{k}}{\Delta x^2}  \tag{5}</script><script type="math/tex; mode=display">\frac{\alpha^2 u}{\alpha z^2} = \frac{u_{i,j+1}^{k}+u_{i,j-1}^{k}-2u_{i,j}^{k}}{\Delta z^2}  \tag{6}</script><p>将公式$(4)-(6)$回代入二维声波方程$(1)$，得到二维声波方程在时间二阶、空间二阶的有限差分格式：</p>
+<script type="math/tex; mode=display">\frac{u_{i,j}^{k+1}+u_{i,j}^{k-1}-2u_{i,j}^{k}}{\Delta t^2}=v^2(\frac{u_{i+1,j}^{k}+u_{i-1,j}^{k}-2u_{i,j}^{k}}{\Delta x^2} + \frac{u_{i,j+1}^{k}+u_{i,j-1}^{k}-2u_{i,j}^{k}}{\Delta z^2})+s(t) \tag{7-1}</script><p>化简：</p>
+<script type="math/tex; mode=display">{u_{i,j}^{k+1}+u_{i,j}^{k-1}-2u_{i,j}^{k}} = \frac{v^2 \Delta t^2}{\Delta x^2}(u_{i+1,j}^{k}+u_{i-1,j}^{k}-2u_{i,j}^{k}) + \frac{v^2 \Delta t^2}{\Delta z^2}(u_{i,j+1}^{k}+u_{i,j-1}^{k}-2u_{i,j}^{k})+s(t) \tag{7-2}</script><script type="math/tex; mode=display">u_{i,j}^{k+1} = 2u_{i,j}^{k} - u_{i,j}^{k-1} + \frac{v^2 \Delta t^2}{\Delta x^2}(u_{i+1,j}^{k}+u_{i-1,j}^{k}-2u_{i,j}^{k}) + \frac{v^2 \Delta t^2}{\Delta z^2}(u_{i,j+1}^{k}+u_{i,j-1}^{k}-2u_{i,j}^{k})+s(t) \tag{7-3}</script><p>同理可得到二维声波方程在时间二阶，空间2N阶的有限差分格式：</p>
+<script type="math/tex; mode=display">u_{i,j}^{k+1} = 2u_{i,j}^{k} - u_{i,j}^{k-1} + \frac{v^2 \Delta t^2}{\Delta x^2}\sum_{p=1}^{N}C_p(u_{i+p,j}^{k}+u_{i-p,j}^{k}-2u_{i,j}^{k}) + \frac{v^2 \Delta t^2}{\Delta z^2}\sum_{p=1}^{N}C_p(u_{i,j+p}^{k}+u_{i,j-p}^{k}-2u_{i,j}^{k})+s(t) \tag{8-1}</script><p>若化简合并$u_{i,j}^k$，则：</p>
+<script type="math/tex; mode=display">u_{i,j}^{k+1} = 2u_{i,j}^{k} - u_{i,j}^{k-1} + \frac{v^2 \Delta t^2}{\Delta x^2} \sum_{p=0}^{N}C_p(u_{i+p,j}^{k}+u_{i-p,j}^{k} + u_{i,j+p}^{k}+u_{i,j-p}^{k}-2u_{i,j}^{k})+s(t)) \tag{8-2}</script><p>其中二阶导数的偶数阶精度有限差分系数如下表所示：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>精度(阶数)</th>
+<th>$C_0$</th>
+<th>$C_1$</th>
+<th>$C_2$</th>
+<th>$C_3$</th>
+<th>$C_4$</th>
+<th>$C_5$</th>
+<th>$C_6$</th>
+<th>$C_7$</th>
+<th>$C_8$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>-2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>$-\frac{5}{2}$</td>
+<td>$\frac{4}{3}$</td>
+<td>$-\frac{1}{12}$</td>
+</tr>
+<tr>
+<td>6</td>
+<td>$-\frac{49}{18}$</td>
+<td>$\frac{3}{2}$</td>
+<td>$-\frac{3}{20}$</td>
+<td>$\frac{1}{90}$</td>
+</tr>
+<tr>
+<td>8</td>
+<td>$-\frac{205}{72}$</td>
+<td>$\frac{8}{5}$</td>
+<td>$-\frac{1}{5}$</td>
+<td>$\frac{8}{315}$</td>
+<td>$-\frac{1}{560}$</td>
+</tr>
+<tr>
+<td>10</td>
+<td>$-\frac{5269}{1800}$</td>
+<td>$\frac{5}{3}$</td>
+<td>$-\frac{5}{21}$</td>
+<td>$\frac{5}{126}$</td>
+<td>$-\frac{5}{1008}$</td>
+<td>$\frac{1}{3150}$</td>
+</tr>
+<tr>
+<td>12</td>
+<td>$-\frac{5369}{1800}$</td>
+<td>$\frac{12}{7}$</td>
+<td>$-\frac{15}{56}$</td>
+<td>$\frac{10}{189}$</td>
+<td>$-\frac{1}{112}$</td>
+<td>$\frac{2}{1925}$</td>
+<td>$-\frac{1}{16632}$</td>
+</tr>
+<tr>
+<td>14</td>
+<td>$-\frac{266681}{88200}$</td>
+<td>$\frac{7}{4}$</td>
+<td>$-\frac{7}{24}$</td>
+<td>$\frac{7}{108}$</td>
+<td>$-\frac{7}{528}$</td>
+<td>$\frac{7}{3300}$</td>
+<td>$-\frac{7}{30888}$</td>
+<td>$\frac{1}{84084}$</td>
+</tr>
+<tr>
+<td>16</td>
+<td>$-\frac{1077749}{352800}$</td>
+<td>$\frac{16}{9}$</td>
+<td>$-\frac{14}{45}$</td>
+<td>$\frac{112}{1485}$</td>
+<td>$-\frac{7}{396}$</td>
+<td>$\frac{112}{32175}$</td>
+<td>$-\frac{2}{3861}$</td>
+<td>$\frac{16}{315315}$</td>
+<td>$-\frac{1}{411840}$</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Notice：在实际编程中，采用式$(8-1)$的形式，因此上表中$C_0$项省略</strong></p>
+<h3 id="震源项"><a href="#震源项" class="headerlink" title="震源项"></a>震源项</h3><p>采用雷克子波作为震源函数，其在时间域的表达式为：</p>
+<script type="math/tex; mode=display">s(t)=e^{-(2\pi f/ r)^2t^2}cos(2\pi ft) \tag{9}</script><p>对时间进行离散化后：</p>
+<script type="math/tex; mode=display">s(k\Delta t)=e^{-(2\pi f/ r)^2k\Delta t^2}cos(2\pi fk\Delta t) \tag{10}</script><p>关于雷克子波的更多介绍，可参考<a href="https://cocklebur0924.github.io/2022/10/11/Seismic02_RickerWavelet/">地震学习笔记 | 雷克子波的认识 | Matlab代码</a>。</p>
+<h2 id="c-程序实现"><a href="#c-程序实现" class="headerlink" title="c++程序实现"></a>c++程序实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 2D FDM Seismic Forward (without Absorting Boundary)</span></span><br><span class="line"><span class="comment">// Spatial accuracy: N = 2 - 16 (even number)</span></span><br><span class="line"><span class="comment">// Author：Cocklebur</span></span><br><span class="line"><span class="comment">// 2023 </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;math.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdlib.h&gt;</span> </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> <span class="keyword">warning</span>(disable : 4996)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Define Constant </span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PI 3.14159265359</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> nx 400                                  <span class="comment">//网格点x(m)；</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> nz 400                                  <span class="comment">//网格点z(m)；</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> dh 4                                    <span class="comment">//空间步长dh(m)；</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> dt 0.00025                              <span class="comment">//时间步长dt(s)；</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> Sx 200                                  <span class="comment">//震源位置x(m)；</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> Sz 100                                  <span class="comment">//震源位置z(m)；</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> F 20                                    <span class="comment">//震源主频f(Hz)：15-25Hz；</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> R 3                                     <span class="comment">//震源Lamda取值范围2-4；</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> Kmax 1000                               <span class="comment">//时间循环次数；</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 建 立 二 维 动 态 数 组 函 数 </span></span><br><span class="line"><span class="function"><span class="type">double</span>**<span class="title">dimension2</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> i;</span><br><span class="line">	<span class="type">double</span> **m;</span><br><span class="line">	m = (<span class="type">double</span>**)<span class="built_in">malloc</span>(x * <span class="built_in">sizeof</span>(<span class="type">double</span>*));</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; x; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		m[i] = (<span class="type">double</span>*)<span class="built_in">malloc</span>(y*<span class="built_in">sizeof</span>(<span class="type">double</span>));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> m;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 矩 阵 交 换 赋 值 函 数 </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">exchange</span><span class="params">(<span class="type">double</span> **u1, <span class="type">double</span> **u2, <span class="type">double</span> **u3)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> i, j;</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i&lt;nx; i++)</span><br><span class="line">		<span class="keyword">for</span> (j = <span class="number">0</span>; j&lt;nz; j++)</span><br><span class="line">			u1[i][j] = u2[i][j];</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i&lt;nx; i++)</span><br><span class="line">		<span class="keyword">for</span> (j = <span class="number">0</span>; j&lt;nz; j++)</span><br><span class="line">			u2[i][j] = u3[i][j];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ************** Main Program Start **************</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">// 定 义 变 量 </span></span><br><span class="line">	FILE *fp1, *fp2;                               <span class="comment">// fp1存放波场值，fp2存放地震记录</span></span><br><span class="line">	<span class="type">int</span> i, j, k, delta, N;                         <span class="comment">// N为空间精度；delta函数控制是否加载震源项</span></span><br><span class="line">	<span class="type">double</span> v;                                      <span class="comment">// 速度模型v；</span></span><br><span class="line">	<span class="type">double</span>** u1, ** u2, ** u3, s[Kmax], ** rec;    <span class="comment">// 波场值u1(past),u2(now),u3(future)；震源函数s；地震记录rec；</span></span><br><span class="line">	<span class="type">double</span> t1, t2, A;</span><br><span class="line">	u1 = <span class="built_in">dimension2</span>(nx,nz);</span><br><span class="line">	u2 = <span class="built_in">dimension2</span>(nx,nz);</span><br><span class="line">	u3 = <span class="built_in">dimension2</span>(nx,nz);</span><br><span class="line">	rec = <span class="built_in">dimension2</span>(nx, Kmax);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 选 择 声 波 方 程 空 间 阶 数 </span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Please enter the accuracy(support：2-16 even number):\n&quot;</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;N);</span><br><span class="line"><span class="comment">// 选 择 想 要 输 出 波 场 值 的 时 刻</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Which iter of times do you want to output?\n&quot;</span>);</span><br><span class="line">	<span class="comment">//scanf(&quot;%d&quot;, &amp;wave);</span></span><br><span class="line">	vector &lt; <span class="type">int</span> &gt; wave;</span><br><span class="line">	<span class="type">int</span>  p = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">do</span> &#123;</span><br><span class="line">		cin &gt;&gt; p;</span><br><span class="line">		wave.<span class="built_in">push_back</span>(p);</span><br><span class="line">	&#125; <span class="keyword">while</span> (<span class="built_in">getchar</span>() != <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;---The wave field will be output at these moments(iter*dt) :---&quot;</span> &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">0</span>; p &lt; wave.<span class="built_in">size</span>(); p++)</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;when time = &quot;</span> &lt;&lt; dt*wave.<span class="built_in">at</span>(p) &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 波 场 值 赋 初 值</span></span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nx; i++)</span><br><span class="line">		<span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; nz; j++)</span><br><span class="line">		&#123;</span><br><span class="line">			u1[i][j] = <span class="number">0</span>;</span><br><span class="line">			u2[i][j] = <span class="number">0</span>;</span><br><span class="line">			u3[i][j] = <span class="number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nx; i++)</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k &lt; Kmax; k++) </span><br><span class="line">		&#123;</span><br><span class="line">			rec[i][k] = <span class="number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 震 源 函 数</span></span><br><span class="line">	<span class="keyword">for</span> (k = <span class="number">0</span>; k &lt; Kmax; k++)                       </span><br><span class="line">	&#123;</span><br><span class="line">		s[k] = <span class="built_in">exp</span>(-<span class="built_in">pow</span>(<span class="number">2</span>*PI*F/R, <span class="number">2</span>)*<span class="built_in">pow</span>(k*dt, <span class="number">2</span>))*<span class="built_in">cos</span>(<span class="number">2</span>*PI*F*k*dt);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"><span class="comment">// 定 义 速 度 模 型</span></span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nx; i++)</span><br><span class="line">		<span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; nz; j++) </span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (j &lt; <span class="number">200</span>)                            </span><br><span class="line">				v = <span class="number">2000</span>;</span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">				v = <span class="number">2500</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// N 阶 空 间 精 度 波 场 值 计 算</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span> (k = <span class="number">0</span>; k &lt; Kmax; k++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span> (i = N/<span class="number">2</span>; i &lt; nx - N/<span class="number">2</span>; i++)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">for</span> (j = N/<span class="number">2</span>; j &lt; nz - N/<span class="number">2</span>; j++)</span><br><span class="line">			&#123;</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (i == Sx &amp;&amp; j == Sz)</span><br><span class="line">					delta = <span class="number">1</span>;</span><br><span class="line">				<span class="keyword">else</span></span><br><span class="line">					delta = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">				<span class="comment">//空间精度2-16阶的系数矩阵</span></span><br><span class="line">				<span class="type">double</span> c[<span class="number">8</span>][<span class="number">8</span>] = </span><br><span class="line">				&#123; </span><br><span class="line">					&#123;<span class="number">1.0</span>&#125;,</span><br><span class="line">					&#123;<span class="number">4</span>/<span class="number">3.0</span>,<span class="number">-1</span>/<span class="number">12.0</span>&#125;,</span><br><span class="line">					&#123;<span class="number">3</span>/<span class="number">2.0</span>,<span class="number">-3</span>/<span class="number">20.0</span>,<span class="number">1</span>/<span class="number">90.0</span>&#125;,</span><br><span class="line">					&#123;<span class="number">8</span>/<span class="number">5.0</span>,<span class="number">-1</span>/<span class="number">5.0</span>,<span class="number">8</span>/<span class="number">315.0</span>,<span class="number">-1</span>/<span class="number">560.0</span>&#125;,</span><br><span class="line">					&#123;<span class="number">5</span>/<span class="number">3.0</span>,<span class="number">-5</span>/<span class="number">21.0</span>,<span class="number">5</span>/<span class="number">126.0</span>,<span class="number">-5</span>/<span class="number">1008.0</span>,<span class="number">1</span>/<span class="number">3150.0</span>&#125;,</span><br><span class="line">					&#123;<span class="number">12</span>/<span class="number">7.0</span>,<span class="number">-15</span>/<span class="number">56.0</span>,<span class="number">10</span>/<span class="number">189.0</span>,<span class="number">-1</span>/<span class="number">112.0</span>,<span class="number">2</span>/<span class="number">1925.0</span>,<span class="number">-1</span>/<span class="number">16632.0</span>&#125;,</span><br><span class="line">					&#123;<span class="number">7</span>/<span class="number">4.0</span>,<span class="number">-7</span>/<span class="number">24.0</span>,<span class="number">7</span>/<span class="number">108.0</span>,<span class="number">-7</span>/<span class="number">528.0</span>,<span class="number">7</span>/<span class="number">3300.0</span>,<span class="number">-7</span>/<span class="number">30888.0</span>,<span class="number">1</span>/<span class="number">84084.0</span>&#125;,</span><br><span class="line">					&#123;<span class="number">16</span>/<span class="number">9.0</span>,<span class="number">-14</span>/<span class="number">45.0</span>,<span class="number">112</span>/<span class="number">1485.0</span>,<span class="number">-7</span>/<span class="number">396.0</span>,<span class="number">112</span>/<span class="number">32175.0</span>,<span class="number">2</span>/<span class="number">3861.0</span>,<span class="number">16</span>/<span class="number">315315.0</span>,<span class="number">-1</span>/<span class="number">411840.0</span>&#125;,</span><br><span class="line">				&#125;;</span><br><span class="line"></span><br><span class="line">				A = <span class="number">0</span>;</span><br><span class="line">				<span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">1</span>; p &lt;= N/<span class="number">2</span>; p++)</span><br><span class="line">				&#123;</span><br><span class="line">					t1 = c[N/<span class="number">2</span><span class="number">-1</span>][p<span class="number">-1</span>] * (u2[i + p][j] + u2[i - p][j] - <span class="number">2</span> * u2[i][j]);</span><br><span class="line">					t2 = c[N/<span class="number">2</span><span class="number">-1</span>][p<span class="number">-1</span>] * (u2[i][j +p] + u2[i][j-p] - <span class="number">2</span> * u2[i][j]);</span><br><span class="line">					A += t1 + t2;</span><br><span class="line">				&#125;</span><br><span class="line">				 </span><br><span class="line">				u3[i][j] = <span class="number">2</span> * u2[i][j] - u1[i][j] + <span class="built_in">pow</span>(v * dt / dh, <span class="number">2</span>) * A + s[k] * delta;</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (j == Sz)</span><br><span class="line">					rec[i][k] = u3[i][Sz];                  <span class="comment">// 输出地震记录；</span></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">0</span>; p &lt; wave.<span class="built_in">size</span>(); p++)</span><br><span class="line">		&#123;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> ((k + <span class="number">1</span>) == wave.<span class="built_in">at</span>(p))                                      <span class="comment">// K = wave 时波场值输出；</span></span><br><span class="line">			&#123;</span><br><span class="line">				<span class="type">char</span> filename[<span class="number">20</span>];</span><br><span class="line">					<span class="built_in">sprintf</span>(filename, <span class="string">&quot;wavefront_%d.dat&quot;</span>, wave.<span class="built_in">at</span>(p));</span><br><span class="line"></span><br><span class="line">					<span class="keyword">if</span> (fp1 = <span class="built_in">fopen</span>(filename, <span class="string">&quot;w&quot;</span>))</span><br><span class="line">					&#123;</span><br><span class="line">						<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nx; i++)</span><br><span class="line">							<span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; nz; j++)</span><br><span class="line">							&#123;</span><br><span class="line">								<span class="built_in">fprintf</span>(fp1, <span class="string">&quot;%lf\t&quot;</span>, u3[i][j]);</span><br><span class="line">									<span class="keyword">if</span> (j == nz - <span class="number">1</span>)</span><br><span class="line">										<span class="built_in">fprintf</span>(fp1, <span class="string">&quot;\n&quot;</span>);</span><br><span class="line">							&#125;</span><br><span class="line">						<span class="built_in">fclose</span>(fp1);</span><br><span class="line">					&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="built_in">exchange</span>(u1, u2, u3);</span><br><span class="line">		<span class="keyword">if</span> ((k + <span class="number">1</span>) % <span class="number">100</span> == <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;No.%d has been completed!\n&quot;</span>, k+<span class="number">1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (fp2 = <span class="built_in">fopen</span>(<span class="string">&quot;record.dat&quot;</span>, <span class="string">&quot;w&quot;</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nx; i++)</span><br><span class="line">			<span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; Kmax; j++)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="built_in">fprintf</span>(fp2,<span class="string">&quot;%lf\t&quot;</span>, rec[i][j]);</span><br><span class="line">				<span class="keyword">if</span> (j == Kmax - <span class="number">1</span>)</span><br><span class="line">					<span class="built_in">fprintf</span>(fp2, <span class="string">&quot;\n&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="built_in">fclose</span>(fp2);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nx; i++) </span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">free</span>(u1[i]);</span><br><span class="line">		<span class="built_in">free</span>(u2[i]);</span><br><span class="line">		<span class="built_in">free</span>(u3[i]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h2><p>matlab绘制结果，以6阶精度为例。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">clc;</span><br><span class="line">clear;</span><br><span class="line">close all;</span><br><span class="line"></span><br><span class="line">record = load(<span class="string">&#x27;record.dat&#x27;</span>);</span><br><span class="line">wavefront_200 = load(<span class="string">&#x27;wavefront_200.dat&#x27;</span>);</span><br><span class="line">wavefront_400 = load(<span class="string">&#x27;wavefront_400.dat&#x27;</span>);</span><br><span class="line">wavefront_600 = load(<span class="string">&#x27;wavefront_600.dat&#x27;</span>);</span><br><span class="line">wavefront_800 = load(<span class="string">&#x27;wavefront_800.dat&#x27;</span>);</span><br><span class="line"></span><br><span class="line">imagesc(record&#x27;);</span><br><span class="line">colormap(gray);</span><br><span class="line">xlabel(<span class="string">&#x27;X&#x27;</span>);</span><br><span class="line">ylabel(<span class="string">&#x27;Time&#x27;</span>);</span><br><span class="line">title(<span class="string">&#x27;Seismic Record&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">figure</span>,</span><br><span class="line">subplot(<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line">imagesc(wavefront_200&#x27;);</span><br><span class="line">xlabel(<span class="string">&#x27;X&#x27;</span>);</span><br><span class="line">ylabel(<span class="string">&#x27;Z&#x27;</span>);</span><br><span class="line">title(<span class="string">&#x27;Wavefront-200iter&#x27;</span>);</span><br><span class="line">subplot(<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line">imagesc(wavefront_400&#x27;);</span><br><span class="line">xlabel(<span class="string">&#x27;X&#x27;</span>);</span><br><span class="line">ylabel(<span class="string">&#x27;Z&#x27;</span>);</span><br><span class="line">title(<span class="string">&#x27;Wavefront-400iter&#x27;</span>);</span><br><span class="line">subplot(<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">imagesc(wavefront_600&#x27;);</span><br><span class="line">xlabel(<span class="string">&#x27;X&#x27;</span>);</span><br><span class="line">ylabel(<span class="string">&#x27;Z&#x27;</span>);</span><br><span class="line">title(<span class="string">&#x27;Wavefront-600iter&#x27;</span>);</span><br><span class="line">subplot(<span class="number">2</span>,<span class="number">2</span>,<span class="number">4</span>)</span><br><span class="line">imagesc(wavefront_800&#x27;);</span><br><span class="line">xlabel(<span class="string">&#x27;X&#x27;</span>);</span><br><span class="line">ylabel(<span class="string">&#x27;Z&#x27;</span>);</span><br><span class="line">title(<span class="string">&#x27;Wavefront-800iter&#x27;</span>);</span><br><span class="line">colormap(gray);</span><br></pre></td></tr></table></figure>
+<center><img src=/images/Seismic/05_SeismicRecord.png width=100% /></center>
+<center>地震记录</center>
+
+<center><img src=/images/Seismic/05_wavefront.png width=100% /></center>
+<center>波前快照</center>
+
+<p>Notice:由于没有吸收边界，800次迭代时的波场可以看到明显的边界反射。<br>含吸收边界条件的正演程序可参考<a href="https://cocklebur0924.github.io/2023/03/07/Seismic06_2D_FDM_Forward_ABC">地震学习笔记 | 二维声波方程有限差分正演(吸收边界) | 2D FDM Seismic Forward（ABC）</a>。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h2><p>[1] 陈聪. 叠前逆时偏移及成像[D].中国地质大学（北京）,2011.</p>
+<p>[2] 封常青师兄地球物理数据处理课程作业, 2019.</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Yangwen</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cocklebur0924.github.io/2023/02/14/Seismic05_2D_FDM_Forward/">https://cocklebur0924.github.io/2023/02/14/Seismic05_2D_FDM_Forward/</a></span>
+                    </p>
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Study/"># Study</a>
+                    
+                        <a href="/tags/Seismic/"># Seismic</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/03/07/Seismic06_2D_FDM_Forward_ABC/">地震学习笔记 | 二维声波方程有限差分正演(吸收边界) | 2D FDM Seismic Forward（ABC）</a>
+            
+            
+            <a class="next" rel="next" href="/2022/10/31/Seismic04_Filtering/">地震学习笔记 | 一个简单的低通滤波器 | Matlab代码</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Yangwen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+
+    </div>
+</body>
+
+</html>

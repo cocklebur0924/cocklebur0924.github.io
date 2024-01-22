@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yangwen">
+
+
+    <meta name="subtitle" content="Cocklebur's Blog">
+
+
+
+
+<title>Anaconda + VScode | Python环境安装与管理 | Cocklebur&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/image/cocklebur.jpeg">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Cocklebur&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Cocklebur&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Anaconda + VScode | Python环境安装与管理</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Yangwen</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 21, 2024&nbsp;&nbsp;10:11:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Study/">Study</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>本文介绍利用Anaconda进行python环境安装与管理，利用VScode进行代码编辑。</p>
+<h2 id="Anaconda安装与使用"><a href="#Anaconda安装与使用" class="headerlink" title="Anaconda安装与使用"></a>Anaconda安装与使用</h2><h3 id="Anaconda-安装"><a href="#Anaconda-安装" class="headerlink" title="Anaconda 安装"></a>Anaconda 安装</h3><p>Anaconda是一款强大的包管理软件，可以配置独立的项目环境，因此在不同项目用到不同python版本的时候就很方便。无需单独下载python！</p>
+<p>在<a target="_blank" rel="noopener" href="https://www.anaconda.com/download">Anaconda官网下载地址</a>下载相应的版本。</p>
+<p><img src="/images/Soft/anaconda_install_01.png" alt="Anaconda下载"></p>
+<center><img src=/images/Soft/anaconda_install_02.png width=100% /></center>
+<center>Anaconda官网下载</center>
+
+<p>如果网速太慢，可以试试<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/">清华镜像下载地址</a>。</p>
+<p>下载完成后，双击exe文件，安装。</p>
+<p><img src="/images/Soft/anaconda_install_03.png" alt="Anaconda下载"></p>
+<p>一路next，注意如果有勾选环境变量配置的要选上，不过新版本好像已经默认加入环境变量了。<br>直到下面这一步，安装完成。</p>
+<p><img src="/images/Soft/anaconda_install_04.png" alt="Anaconda下载"></p>
+<p>勾上Lauch之后点击Finish，就会自动打开Anaconda Navigator了。浏览器也会弹出来建议你注册获取更多资源的信息，可以不用管。</p>
+<p><img src="/images/Soft/anaconda_install_05.png" alt="Anaconda下载"></p>
+<p>到这里，说明Anaconda已经安装成功了。</p>
+<p>如果是windows用户，在开始栏就可以看到新安装的这些东东了。<br><img src="/images/Soft/anaconda_install_06.png" alt="Anaconda下载"></p>
+<h3 id="Jupyter-Notebook-简单使用"><a href="#Jupyter-Notebook-简单使用" class="headerlink" title="Jupyter Notebook 简单使用"></a>Jupyter Notebook 简单使用</h3><p>下面简单介绍利用默认安装的Jupyter Notebook工具进行python编程。<br>在打开的Anaconda Navigator里可以看到，这里 JupyterLab 和 Jupyter Notebook 已经是安装好的。这里以 Jupyter Notebook为例，点击Lauch运行，浏览器就会跳出来jupyter页面了。</p>
+<p><img src="/images/Soft/anaconda_install_07.png" alt="Anaconda下载"></p>
+<p>在 Jupyter Notebook 页面，右上角点击new python3，就可以打开一个jupyter格式的脚本，开始简单地编程了。</p>
+<p><img src="/images/Soft/anaconda_install_08.png" alt="Anaconda下载"></p>
+<p>每个单元格内运行代码的快捷键是 ctrl+enter 或 shift+enter 。</p>
+<p><img src="/images/Soft/anaconda_install_09.png" alt="Anaconda下载"></p>
+<p>当然，也可以通过在Anaconda powershell prompt 输入Jupyter notebook直接召唤他。</p>
+<p><img src="/images/Soft/anaconda_install_10.png" alt="Anaconda下载"></p>
+<h3 id="Anaconda-环境创建"><a href="#Anaconda-环境创建" class="headerlink" title="Anaconda 环境创建"></a>Anaconda 环境创建</h3><p>通过交互式界面（Anaconda Navigator）和命令行（Anaconda powershell prompt）都可以创建环境，并进行包管理。</p>
+<ol>
+<li>利用 Anaconda Navigator 创建（不推荐）</li>
+</ol>
+<p>在Environments界面点击左下角Create即可创建，输入环境名称，选择相应的python版本，点击Create就好了。</p>
+<p><img src="/images/Soft/anaconda_install_11.png" alt="Anaconda下载"></p>
+<p>相应的包管理也可以通过点点点的方式实现，然而还是利用命令行方便一些，所以下面主要介绍利用Anaconda powershell prompt 创建并管理环境的一些常用常用命令。</p>
+<ol>
+<li><strong> 利用 Anaconda powershell prompt 创建 </strong></li>
+</ol>
+<p>打开Anaconda powershell prompt，输入以下命令行即可创建。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create --name py311 python=3.11  </span><br></pre></td></tr></table></figure>
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create -n py311 python=3.11 #创建名为py311的环境，其python版本为3.11</span><br></pre></td></tr></table></figure>
+<p>如果想删除这个环境：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda remove -n py311 --all</span><br></pre></td></tr></table></figure>
+<p>查看所有环境：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda info -e  #或conda info --envs 或conda env list</span><br></pre></td></tr></table></figure>
+<p>激活环境：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda activate py311  #conda activate+环境名</span><br></pre></td></tr></table></figure>
+<p>查看当前环境下所有的包：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda list</span><br></pre></td></tr></table></figure>
+<p>下载包（以matplotlib为例）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install matplotlib</span><br></pre></td></tr></table></figure>
+<p>卸载包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda uninstall matplotlib</span><br></pre></td></tr></table></figure>
+<p>退出环境，默认回到base环境</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda deactivate py311</span><br></pre></td></tr></table></figure>
+<p>查看环境位置等信息<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda info</span><br></pre></td></tr></table></figure></p>
+<p>以上，就可以使用python进行简单地编程了，然而为了使编程过程更加丝滑，还是推荐使用VScode~</p>
+<h2 id="VScode-安装与使用"><a href="#VScode-安装与使用" class="headerlink" title="VScode 安装与使用"></a>VScode 安装与使用</h2><h3 id="VScode-安装"><a href="#VScode-安装" class="headerlink" title="VScode 安装"></a>VScode 安装</h3><p>在<a target="_blank" rel="noopener" href="https://code.visualstudio.com/Download">vscode官方下载地址</a>下载需要的版本。</p>
+<p><img src="/images/Soft/vs_01.png" alt="vscode下载"></p>
+<p>一路next下载，这一步可以勾选添加到Windows上下文菜单，这样可以右键文件通过vscode打开。</p>
+<p><img src="/images/Soft/vs_02.png" alt="vscode下载"></p>
+<p><img src="/images/Soft/vs_021.png" alt="vscode下载"></p>
+<p>直到这一步，完成安装~</p>
+<p><img src="/images/Soft/vs_03.png" alt="vscode下载"></p>
+<h3 id="VScode-使用"><a href="#VScode-使用" class="headerlink" title="VScode 使用"></a>VScode 使用</h3><p>VScode界面如下，New file 即可新建py格式或ipynb格式的文件，平时同一个项目我通常放在一个文件夹中，Open Folder即可打开项目文件夹。</p>
+<p><img src="/images/Soft/vs_04.png" alt="vscode下载"></p>
+<p>这里演示新建了一个ipynb格式文件，右上角可以选择相应的配置环境（<strong>上面介绍的Anaconda已经配置好的环境</strong>），左下角可以打开terminal。每个单元格内运行的快捷键也是<strong>Ctrl+Enter</strong>。</p>
+<p><img src="/images/Soft/vs_05.png" alt="vscode下载"></p>
+<p>如果是py格式，配置环境的解释器选择在右下角。</p>
+<p><img src="/images/Soft/vs_06.png" alt="vscode下载"></p>
+<p>一些基本的操作就是这样啦，hope u have a good time ♥</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Yangwen</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cocklebur0924.github.io/2024/01/21/Python01_install/">https://cocklebur0924.github.io/2024/01/21/Python01_install/</a></span>
+                    </p>
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Study/"># Study</a>
+                    
+                        <a href="/tags/Soft/"># Soft</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/03/07/Seismic06_2D_FDM_Forward_ABC/">地震学习笔记 | 二维声波方程有限差分正演(吸收边界) | 2D FDM Seismic Forward（ABC）</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Yangwen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+
+    </div>
+</body>
+
+</html>
