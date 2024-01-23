@@ -31,8 +31,10 @@ E-mail: 1138413015@qq.com
 
 Your support is important to me ♥
 
-<center><img src=/images/alipay.jpg width=40% /></center>
-<center>Reward me</center>
+<center><img src=/images/pay.jpg width=40% /></center>
+<center>微信赞赏码</center>
 
+<!-- 
 ![](/images/Internet/jingyue17.jpg)
 <center>From Jingyue's Sina.com</center>
+-->
