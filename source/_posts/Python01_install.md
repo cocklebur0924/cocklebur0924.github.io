@@ -70,7 +70,7 @@ Anaconda是一款强大的包管理软件，可以配置独立的项目环境，
 
 通过交互式界面（Anaconda Navigator）和命令行（Anaconda powershell prompt）都可以创建环境，并进行包管理。
 
-1. 利用 Anaconda Navigator 创建（不推荐）
+(1) 利用 Anaconda Navigator 创建（不推荐）
 
 在Environments界面点击左下角Create即可创建，输入环境名称，选择相应的python版本，点击Create就好了。
 
@@ -78,7 +78,7 @@ Anaconda是一款强大的包管理软件，可以配置独立的项目环境，
 
 相应的包管理也可以通过点点点的方式实现，然而还是利用命令行方便一些，所以下面主要介绍利用Anaconda powershell prompt 创建并管理环境的一些常用常用命令。
 
-2. ** 利用 Anaconda powershell prompt 创建 **
+(2) ** 利用 Anaconda powershell prompt 创建 **
 
 打开Anaconda powershell prompt，输入以下命令行即可创建。
 
@@ -177,6 +177,10 @@ VScode界面如下，New file 即可新建py格式或ipynb格式的文件，平�
 ![vscode下载](/images/Soft/vs_06.png)
 
 
+### 可能遇到的问题
+
+如果vscode中选不到配好的anaconda环境，可能是anaconda没有添加进环境变量，需要手动添加环境变量：
+右键此电脑——属性——高级系统设置——环境变量——系统变量Path——编辑——新建，添加你的anaconda下载路径。
 
 
-一些基本的操作就是这样啦，hope u have a good time ♥
+♥ The end ♥
