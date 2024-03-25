@@ -289,15 +289,11 @@
 <p>当然，也可以通过在Anaconda powershell prompt 输入Jupyter notebook直接召唤他。</p>
 <p><img src="/images/Soft/anaconda_install_10.png" alt="Anaconda下载"></p>
 <h3 id="Anaconda-环境创建"><a href="#Anaconda-环境创建" class="headerlink" title="Anaconda 环境创建"></a>Anaconda 环境创建</h3><p>通过交互式界面（Anaconda Navigator）和命令行（Anaconda powershell prompt）都可以创建环境，并进行包管理。</p>
-<ol>
-<li>利用 Anaconda Navigator 创建（不推荐）</li>
-</ol>
+<p>(1) 利用 Anaconda Navigator 创建（不推荐）</p>
 <p>在Environments界面点击左下角Create即可创建，输入环境名称，选择相应的python版本，点击Create就好了。</p>
 <p><img src="/images/Soft/anaconda_install_11.png" alt="Anaconda下载"></p>
 <p>相应的包管理也可以通过点点点的方式实现，然而还是利用命令行方便一些，所以下面主要介绍利用Anaconda powershell prompt 创建并管理环境的一些常用常用命令。</p>
-<ol>
-<li><strong> 利用 Anaconda powershell prompt 创建 </strong></li>
-</ol>
+<p>(2) <strong> 利用 Anaconda powershell prompt 创建 </strong></p>
 <p>打开Anaconda powershell prompt，输入以下命令行即可创建。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create --name py311 python=3.11  </span><br></pre></td></tr></table></figure>
 <p>或</p>
@@ -331,7 +327,8 @@
 <p><img src="/images/Soft/vs_05.png" alt="vscode下载"></p>
 <p>如果是py格式，配置环境的解释器选择在右下角。</p>
 <p><img src="/images/Soft/vs_06.png" alt="vscode下载"></p>
-<p>一些基本的操作就是这样啦，hope u have a good time ♥</p>
+<h3 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h3><p>如果vscode中选不到配好的anaconda环境，可能是anaconda没有添加进环境变量，需要手动添加环境变量：<br>右键此电脑——属性——高级系统设置——环境变量——系统变量Path——编辑——新建，添加你的anaconda下载路径。</p>
+<p>♥ The end ♥</p>
 
         </div>
 
