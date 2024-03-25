@@ -3,7 +3,7 @@ title: Anaconda + VScode | Python环境安装与管理
 date: 2024-01-21 10:11:00
 tags: [Study,Soft]
 categories: [Study]
-mathjax: true
+mathjax: False
 ---
 
 
