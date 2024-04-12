@@ -42,6 +42,13 @@ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.o
 
 打开一个jupter，选择刚刚安装好pytorch的那个环境，import torch 检查是否安装成功。
 
+```
+import torch
+print(torch.cuda.is_available())
+print(torch.cuda.device_count())
+print(torch.version.cuda)
+```
+
 ![](/images/Soft/python03_check.png)
 
 ### The End
