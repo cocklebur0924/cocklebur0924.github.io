@@ -238,6 +238,7 @@
 <p>然后漫长的等待,等到出现successful installed，就安装好啦。</p>
 <p><img src="/images/Soft/python03_ok.png" alt=""></p>
 <h3 id="检查是否安装成功"><a href="#检查是否安装成功" class="headerlink" title="检查是否安装成功"></a>检查是否安装成功</h3><p>打开一个jupter，选择刚刚安装好pytorch的那个环境，import torch 检查是否安装成功。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">print(torch.cuda.is_available())</span><br><span class="line">print(torch.cuda.device_count())</span><br><span class="line">print(torch.version.cuda)</span><br></pre></td></tr></table></figure>
 <p><img src="/images/Soft/python03_check.png" alt=""></p>
 <h3 id="The-End"><a href="#The-End" class="headerlink" title="The End"></a>The End</h3><p>最后，如果你的电脑木有显卡，可以试试在线租卡，比如<a target="_blank" rel="noopener" href="https://www.autodl.com/login?url=/home">AutoDL</a>。</p>
 
