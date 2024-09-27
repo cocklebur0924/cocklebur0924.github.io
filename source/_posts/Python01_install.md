@@ -139,6 +139,32 @@ conda deactivate py311
 conda info
 ```
 
+Tips: 有时候不同电脑之间需要重建环境，可以直接将某电脑已经配置好的conda环境打包，再解压到目标电脑的envs下就可以，具体操作如下：
+
+1. 首先下载conda-pack命令
+
+```
+pip install conda-pack
+```
+
+2. 打包环境到当前目录
+
+```
+conda pack -n envsname -o envsname.tar.gz
+```
+
+3. 拷贝打包好的文件到目标电脑(例如放在C:\Document\文件夹下)，然后进入目标电脑的anaconda安装目录：
+
+```
+cd C:\Users\Cocklebur77\anaconda3\envs\
+
+mkdir envname
+cd envname
+sudo tar -zxvf C:\Document\envsname.tar.gz
+```
+
+4. 环境就拷贝完成了，可以 conda env list 检查一下。
+
 以上，就可以使用python进行简单地编程了，然而为了使编程过程更加丝滑，还是推荐使用VScode~
 
 ## VScode 安装与使用

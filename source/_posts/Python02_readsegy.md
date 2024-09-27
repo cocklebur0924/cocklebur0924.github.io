@@ -61,20 +61,13 @@ import numpy as np
 def read_segy(data_dir,shotnum=0):
     with segyio.open(data_dir,'r',ignore_geometry=True) as f:
         sourceX = f.attributes(segyio.TraceField.SourceX)[:]
-        shot_p = sourceX.copy()
-        trace_num = len(sourceX) #number of trace, The sourceX under the same shot is the same character.
+        trace_num = len(sourceX) #number of all trace
         if shotnum:
             shot_num = shotnum 
         else:
             shot_num = len(set(sourceX)) #shot number 
         len_shot = trace_num//shot_num   #The length of the data in each shot data
         time = f.trace[0].shape[0]
-        '''
-        The data of each shot is read separately
-        The default is that the data dimensions collected by all shots in the file are the same.
-        Jump=1, which means that the data of all shots in the file is read by default. 
-        When jump=2, it means that every other shot reads data.
-        '''
         print('start read segy data')
         data = np.zeros((shot_num,time,len_shot))
         for j in range(0,shot_num):
@@ -168,4 +161,36 @@ plt.colorbar()
 
 ![model check](/images/Soft/segy_model_check.png)
 
+
+### Tips 将炮集数据抽成共检波点道集
+
+
+```
+paths= 'common_source.segy'
+with segyio.open(paths,'r',ignore_geometry=True) as f:
+    sourceX = f.attributes(segyio.TraceField.SourceX)[:]
+    trace_num = len(sourceX) #number of trace, The sourceX under the same shot is the same character.
+    print('trace_num = ',trace_num)
+
+    shot_num = len(set(sourceX)) #shot number 
+    print('source_num = ',shot_num)
+
+    len_shot = trace_num//shot_num   #The length of the data in each shot data
+    print('len_shot(trace num of per source) = ',len_shot)
+
+    time = f.trace[0].shape[0]
+    print('sampling time = ', time)
+
+    print('start read segy data')
+    data = np.zeros((shot_num,time,len_shot))
+    for j in range(0,shot_num):
+        data[j,:,:] = np.asarray([np.copy(x) for x in f.trace[j*len_shot:(j+1)*len_shot]]).T
+    print(data.shape)
+    
+    crp_data = np.zeros((len_shot,time,shot_num))
+    for i in range(len_shot):
+        for t in range(time):
+            crp_data[i, t, :] = data[:, t, i]
+    print(crp_data.shape)
+```
 
