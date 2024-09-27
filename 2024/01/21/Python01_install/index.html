@@ -274,6 +274,22 @@
 <p>退出环境，默认回到base环境</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda deactivate py311</span><br></pre></td></tr></table></figure>
 <p>查看环境位置等信息<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda info</span><br></pre></td></tr></table></figure></p>
+<p>Tips: 有时候不同电脑之间需要重建环境，可以直接将某电脑已经配置好的conda环境打包，再解压到目标电脑的envs下就可以，具体操作如下：</p>
+<ol>
+<li>首先下载conda-pack命令</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install conda-pack</span><br></pre></td></tr></table></figure>
+<ol>
+<li>打包环境到当前目录</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda pack -n envsname -o envsname.tar.gz</span><br></pre></td></tr></table></figure>
+<ol>
+<li>拷贝打包好的文件到目标电脑(例如放在C:\Document\文件夹下)，然后进入目标电脑的anaconda安装目录：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd C:\Users\Cocklebur77\anaconda3\envs\</span><br><span class="line"></span><br><span class="line">mkdir envname</span><br><span class="line">cd envname</span><br><span class="line">sudo tar -zxvf C:\Document\envsname.tar.gz</span><br></pre></td></tr></table></figure>
+<ol>
+<li>环境就拷贝完成了，可以 conda env list 检查一下。</li>
+</ol>
 <p>以上，就可以使用python进行简单地编程了，然而为了使编程过程更加丝滑，还是推荐使用VScode~</p>
 <h2 id="VScode-安装与使用"><a href="#VScode-安装与使用" class="headerlink" title="VScode 安装与使用"></a>VScode 安装与使用</h2><h3 id="VScode-安装"><a href="#VScode-安装" class="headerlink" title="VScode 安装"></a>VScode 安装</h3><p>在<a target="_blank" rel="noopener" href="https://code.visualstudio.com/Download">vscode官方下载地址</a>下载需要的版本。</p>
 <p><img src="/images/Soft/vs_01.png" alt="vscode下载"></p>
