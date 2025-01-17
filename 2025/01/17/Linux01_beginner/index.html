@@ -263,10 +263,6 @@
 <li><strong><code>cat</code></strong><br>显示文件内容。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> file_name      <span class="comment"># 显示文件内容</span></span><br><span class="line"><span class="built_in">cat</span> file1 file2    <span class="comment"># 显示多个文件内容</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="文件权限命令"><a href="#文件权限命令" class="headerlink" title="文件权限命令"></a>文件权限命令</h2><ul>
-<li><strong><code>chmod</code></strong><br>修改文件或目录的权限。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> 755 file_name    <span class="comment"># 设置权限为 rwxr-xr-x</span></span><br><span class="line"><span class="built_in">chmod</span> +x file_name     <span class="comment"># 给文件添加执行权限</span></span><br><span class="line"><span class="built_in">chmod</span> -r file_name     <span class="comment"># 删除文件的执行权限</span></span><br><span class="line"><span class="built_in">chmod</span> 644 file_name    <span class="comment"># 设置权限为 rw-r--r--</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
 <h2 id="系统管理命令"><a href="#系统管理命令" class="headerlink" title="系统管理命令"></a>系统管理命令</h2><ul>
 <li><p><strong><code>df</code></strong><br>显示文件系统的磁盘空间使用情况。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">df</span> -h  <span class="comment"># 以可读性更高的方式显示（例如 GB, MB）</span></span><br></pre></td></tr></table></figure>
@@ -300,9 +296,26 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gzip file_name</span><br><span class="line">gunzip file_name.gz                           <span class="comment"># 解压 .gz 文件</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p><strong><code>zip</code></strong><br>压缩文件为 <code>.zip</code> 格式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">  zip archive_name.zip file1 file2              <span class="comment"># 压缩多个文件为 .zip</span></span><br><span class="line">  unzip archive_name</span><br><span class="line"></span><br><span class="line"><span class="comment">## 关于 vi 文本编辑器</span></span><br><span class="line"></span><br><span class="line">参考这里[Linux vi/vim](https://www.runoob.com/linux/linux-vim.html)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 其他Linux命令</span></span><br><span class="line"></span><br><span class="line">参考[Linux命令大全](https://www.runoob.com/linux/linux-command-manual.html)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"><span class="comment">## Linux文件权限介绍</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 1. 权限类型</span></span><br><span class="line"></span><br><span class="line">Linux 系统中的文件权限分为 **三种基本权限**，分别是：</span><br><span class="line"></span><br><span class="line">- **读权限 (`r`)**：允许查看文件内容或列出目录中的文件。</span><br><span class="line">- **写权限 (`w`)**：允许修改文件内容或向目录中添加、删除文件。</span><br><span class="line">- **执行权限 (`x`)**：允许执行文件，或进入目录（`<span class="built_in">cd</span>` 到目录）。</span><br><span class="line"></span><br><span class="line"><span class="comment">### 2. 权限的分配</span></span><br><span class="line"></span><br><span class="line">文件或目录的权限是通过三类用户进行分配的：</span><br><span class="line"></span><br><span class="line">- **文件所有者 (`Owner`)**：文件或目录的拥有者。通常是创建该文件的用户。</span><br><span class="line">- **文件所属组 (`Group`)**：与文件或目录关联的用户组。文件所属组的用户可以根据权限访问文件。</span><br><span class="line">- **其他用户 (`Others`)**：系统中其他用户，既不是文件所有者也不是文件所属组成员的用户。</span><br><span class="line"></span><br><span class="line"><span class="comment">### 3. 权限表示</span></span><br><span class="line"></span><br><span class="line">文件权限通过 10 个字符来表示，格式如下：</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">drwxr-xr--</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zip archive_name.zip file1 file2              <span class="comment"># 压缩多个文件为 .zip</span></span><br><span class="line">unzip archive_name</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+<h2 id="关于-vi-文本编辑器"><a href="#关于-vi-文本编辑器" class="headerlink" title="关于 vi 文本编辑器"></a>关于 vi 文本编辑器</h2><p>参考这里<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-vim.html">Linux vi/vim</a></p>
+<h2 id="其他Linux命令"><a href="#其他Linux命令" class="headerlink" title="其他Linux命令"></a>其他Linux命令</h2><p>参考<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-command-manual.html">Linux命令大全</a></p>
+<hr>
+<h2 id="Linux文件权限介绍"><a href="#Linux文件权限介绍" class="headerlink" title="Linux文件权限介绍"></a>Linux文件权限介绍</h2><h3 id="1-权限类型"><a href="#1-权限类型" class="headerlink" title="1. 权限类型"></a>1. 权限类型</h3><p>Linux 系统中的文件权限分为 <strong>三种基本权限</strong>，分别是：</p>
+<ul>
+<li><strong>读权限 (<code>r</code>)</strong>：允许查看文件内容或列出目录中的文件。</li>
+<li><strong>写权限 (<code>w</code>)</strong>：允许修改文件内容或向目录中添加、删除文件。</li>
+<li><strong>执行权限 (<code>x</code>)</strong>：允许执行文件，或进入目录（<code>cd</code> 到目录）。</li>
+</ul>
+<h3 id="2-权限的分配"><a href="#2-权限的分配" class="headerlink" title="2. 权限的分配"></a>2. 权限的分配</h3><p>文件或目录的权限是通过三类用户进行分配的：</p>
+<ul>
+<li><strong>文件所有者 (<code>Owner</code>)</strong>：文件或目录的拥有者。通常是创建该文件的用户。</li>
+<li><strong>文件所属组 (<code>Group</code>)</strong>：与文件或目录关联的用户组。文件所属组的用户可以根据权限访问文件。</li>
+<li><strong>其他用户 (<code>Others</code>)</strong>：系统中其他用户，既不是文件所有者也不是文件所属组成员的用户。</li>
+</ul>
+<h3 id="3-权限表示"><a href="#3-权限表示" class="headerlink" title="3. 权限表示"></a>3. 权限表示</h3><p>文件权限通过 10 个字符来表示，格式如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drwxr-xr--</span><br></pre></td></tr></table></figure>
 <p>解释：</p>
 <ul>
 <li><strong>第一个字符</strong>：表示文件类型，常见的有：<ul>
@@ -333,6 +346,11 @@
 </ul>
 <p>例如，权限 <code>rwxr-xr--</code> 对应的数字表示是 <code>755</code>。</p>
 <p><img src="/images/Soft/linux01_rwx_777.png" alt="model check"></p>
+<div style="text-align:center;">
+  <a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-chmod.html">示意图From</a>
+</div>
+
+
 <h3 id="5-修改文件权限"><a href="#5-修改文件权限" class="headerlink" title="5. 修改文件权限"></a>5. 修改文件权限</h3><p><strong><code>chmod</code></strong> 命令用于修改文件的权限。可以通过 <strong>符号模式</strong>（字符表示）或 <strong>数字模式</strong> 来设置权限。</p>
 <h4 id="使用符号模式修改权限："><a href="#使用符号模式修改权限：" class="headerlink" title="使用符号模式修改权限："></a>使用符号模式修改权限：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> [权限设置] 文件名</span><br></pre></td></tr></table></figure>
 <ul>
