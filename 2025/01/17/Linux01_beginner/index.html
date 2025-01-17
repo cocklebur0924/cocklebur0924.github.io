@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yangwen">
+
+
+    <meta name="subtitle" content="Cocklebur's Blog">
+
+
+
+
+<title>Linux 常用命令 | 小白版 | Cocklebur&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/image/cocklebur.jpeg">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Cocklebur&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Cocklebur&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linux 常用命令 | 小白版</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Yangwen</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 17, 2025&nbsp;&nbsp;13:27:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Study/">Study</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>本文介绍一些常用的Linux命令。</p>
+<h2 id="基本文件操作命令"><a href="#基本文件操作命令" class="headerlink" title="基本文件操作命令"></a>基本文件操作命令</h2><ul>
+<li><p><strong><code>ls</code></strong><br>列出当前目录的文件和子目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span>                   <span class="comment"># 列出当前目录内容</span></span><br><span class="line"><span class="built_in">ls</span> -l                <span class="comment"># 详细显示（长格式）</span></span><br><span class="line"><span class="built_in">ls</span> -a                <span class="comment"># 显示所有文件，包括隐藏文件</span></span><br><span class="line"><span class="built_in">ls</span> -la               <span class="comment"># 详细显示所有文件</span></span><br><span class="line"><span class="built_in">ls</span> -lh               <span class="comment"># 以人类可读的方式显示文件大小</span></span><br><span class="line"><span class="built_in">ls</span> /                 <span class="comment"># 查看根目录下所有文件</span></span><br><span class="line"><span class="built_in">ls</span> /path/name        <span class="comment"># 查看指定目录下所有文件</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>cd</code></strong><br>改变当前工作目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /path/to/directory  <span class="comment"># 进入指定目录</span></span><br><span class="line"><span class="built_in">cd</span> /                   <span class="comment"># 进入根目录</span></span><br><span class="line"><span class="built_in">cd</span> ~                   <span class="comment"># 进入当前用户的主目录</span></span><br><span class="line"><span class="built_in">cd</span> ..                  <span class="comment"># 返回上一级目录</span></span><br><span class="line"><span class="built_in">cd</span> -                   <span class="comment"># 返回到上一次访问的目录</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>pwd</code></strong><br>显示当前工作目录的完整路径。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">pwd</span>                    <span class="comment"># 显示当前工作目录</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>mkdir</code></strong><br>创建新目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> new_directory               <span class="comment"># 创建单一目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /path/to/directory       <span class="comment"># 创建多层目录</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>rmdir</code></strong><br>删除空目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rmdir</span> directory_name  <span class="comment"># 删除空目录</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>rm</code></strong><br>删除文件或目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> file_name             <span class="comment"># 删除文件</span></span><br><span class="line"><span class="built_in">rm</span> -r directory_name     <span class="comment"># 删除目录及其内容</span></span><br><span class="line"><span class="built_in">rm</span> -f file_name          <span class="comment"># 强制删除文件</span></span><br><span class="line"><span class="built_in">rm</span> -rf directory_name    <span class="comment"># 强制删除目录及其内容</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>cp</code></strong><br>复制文件或目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> source_file destination_file    <span class="comment"># 复制文件</span></span><br><span class="line"><span class="built_in">cp</span> -r source_directory destination_directory  <span class="comment"># 复制目录及其内容</span></span><br><span class="line"><span class="built_in">cp</span> -i source_file destination_file   <span class="comment"># 覆盖前提示</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>mv</code></strong><br>移动或重命名文件/目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> old_name new_name    <span class="comment"># 重命名文件</span></span><br><span class="line"><span class="built_in">mv</span> file_name /new_path  <span class="comment"># 移动文件到新路径</span></span><br><span class="line"><span class="built_in">mv</span> -i file_name /new_path  <span class="comment"># 覆盖前提示</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>touch</code></strong><br>创建空文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> new_file.txt       <span class="comment"># 创建一个空文件</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="文件查找命令"><a href="#文件查找命令" class="headerlink" title="文件查找命令"></a>文件查找命令</h2><ul>
+<li><strong><code>find</code></strong><br>查找文件或目录。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find /path/to/search -name <span class="string">&quot;file_name&quot;</span>    <span class="comment"># 按名称查找文件</span></span><br><span class="line">find /path/to/search -<span class="built_in">type</span> d              <span class="comment"># 查找目录</span></span><br><span class="line">find /path/to/search -size +10M           <span class="comment"># 查找大于10MB的文件</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="文件内容查看命令"><a href="#文件内容查看命令" class="headerlink" title="文件内容查看命令"></a>文件内容查看命令</h2><ul>
+<li><strong><code>cat</code></strong><br>显示文件内容。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> file_name      <span class="comment"># 显示文件内容</span></span><br><span class="line"><span class="built_in">cat</span> file1 file2    <span class="comment"># 显示多个文件内容</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="文件权限命令"><a href="#文件权限命令" class="headerlink" title="文件权限命令"></a>文件权限命令</h2><ul>
+<li><strong><code>chmod</code></strong><br>修改文件或目录的权限。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> 755 file_name    <span class="comment"># 设置权限为 rwxr-xr-x</span></span><br><span class="line"><span class="built_in">chmod</span> +x file_name     <span class="comment"># 给文件添加执行权限</span></span><br><span class="line"><span class="built_in">chmod</span> -r file_name     <span class="comment"># 删除文件的执行权限</span></span><br><span class="line"><span class="built_in">chmod</span> 644 file_name    <span class="comment"># 设置权限为 rw-r--r--</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="系统管理命令"><a href="#系统管理命令" class="headerlink" title="系统管理命令"></a>系统管理命令</h2><ul>
+<li><p><strong><code>df</code></strong><br>显示文件系统的磁盘空间使用情况。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">df</span> -h  <span class="comment"># 以可读性更高的方式显示（例如 GB, MB）</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>du</code></strong><br>显示文件和目录的磁盘使用情况。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">du</span> -sh directory_name  <span class="comment"># 显示当前目录总大小</span></span><br><span class="line"><span class="built_in">du</span> -ah directory_name  <span class="comment"># 显示当前目录所有文件和目录大小</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>top</code></strong><br>显示当前系统的运行状态和进程信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">top               <span class="comment"># 动态显示系统进程</span></span><br><span class="line">top -u user_name  <span class="comment"># 显示指定用户的进程</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>ps</code></strong><br>显示当前运行的进程。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps aux  <span class="comment"># 显示所有进程</span></span><br><span class="line">ps -ef  <span class="comment"># 以标准格式显示进程</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>kill</code></strong><br>终止一个进程。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> process_id   <span class="comment"># 结束指定进程</span></span><br><span class="line"><span class="built_in">kill</span> -9 process_id  <span class="comment"># 强制终止进程</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="网络命令"><a href="#网络命令" class="headerlink" title="网络命令"></a>网络命令</h2><ul>
+<li><p><strong><code>ping</code></strong><br>检查网络连接。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ping www.example.com   <span class="comment"># 检查与远程主机的连接</span></span><br><span class="line">ping 192.168.1.1       <span class="comment"># 检查与本地网络设备的连接</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>ipconfig</code></strong><br>显示或配置网络接口。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipconfig               <span class="comment"># 显示网络接口信息</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="压缩与解压命令"><a href="#压缩与解压命令" class="headerlink" title="压缩与解压命令"></a>压缩与解压命令</h2><ul>
+<li><p><strong><code>tar</code></strong><br>用于打包和压缩文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -cvf archive_name.tar directory_name      <span class="comment"># 打包</span></span><br><span class="line">tar -xvf archive_name.tar                     <span class="comment"># 解包</span></span><br><span class="line">tar -czvf archive_name.tar.gz directory_name  <span class="comment"># 压缩为 .tar.gz 文件</span></span><br><span class="line">tar -xzvf archive_name.tar.gz                 <span class="comment"># 解压 .tar.gz 文件</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>gzip</code></strong><br>压缩文件为 <code>.gz</code> 格式。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gzip file_name</span><br><span class="line">gunzip file_name.gz                           <span class="comment"># 解压 .gz 文件</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>zip</code></strong><br>压缩文件为 <code>.zip</code> 格式。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">  zip archive_name.zip file1 file2              <span class="comment"># 压缩多个文件为 .zip</span></span><br><span class="line">  unzip archive_name</span><br><span class="line"></span><br><span class="line"><span class="comment">## 关于 vi 文本编辑器</span></span><br><span class="line"></span><br><span class="line">参考这里[Linux vi/vim](https://www.runoob.com/linux/linux-vim.html)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 其他Linux命令</span></span><br><span class="line"></span><br><span class="line">参考[Linux命令大全](https://www.runoob.com/linux/linux-command-manual.html)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"><span class="comment">## Linux文件权限介绍</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 1. 权限类型</span></span><br><span class="line"></span><br><span class="line">Linux 系统中的文件权限分为 **三种基本权限**，分别是：</span><br><span class="line"></span><br><span class="line">- **读权限 (`r`)**：允许查看文件内容或列出目录中的文件。</span><br><span class="line">- **写权限 (`w`)**：允许修改文件内容或向目录中添加、删除文件。</span><br><span class="line">- **执行权限 (`x`)**：允许执行文件，或进入目录（`<span class="built_in">cd</span>` 到目录）。</span><br><span class="line"></span><br><span class="line"><span class="comment">### 2. 权限的分配</span></span><br><span class="line"></span><br><span class="line">文件或目录的权限是通过三类用户进行分配的：</span><br><span class="line"></span><br><span class="line">- **文件所有者 (`Owner`)**：文件或目录的拥有者。通常是创建该文件的用户。</span><br><span class="line">- **文件所属组 (`Group`)**：与文件或目录关联的用户组。文件所属组的用户可以根据权限访问文件。</span><br><span class="line">- **其他用户 (`Others`)**：系统中其他用户，既不是文件所有者也不是文件所属组成员的用户。</span><br><span class="line"></span><br><span class="line"><span class="comment">### 3. 权限表示</span></span><br><span class="line"></span><br><span class="line">文件权限通过 10 个字符来表示，格式如下：</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">drwxr-xr--</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>解释：</p>
+<ul>
+<li><strong>第一个字符</strong>：表示文件类型，常见的有：<ul>
+<li><code>-</code>：普通文件</li>
+<li><code>d</code>：目录</li>
+<li><code>l</code>：符号链接（symlink）</li>
+</ul>
+</li>
+<li><strong>接下来的 9 个字符</strong>：按顺序表示文件的权限，分为 3 个部分，每个部分 3 个字符：<ul>
+<li><strong>第 2-4 个字符</strong>：文件所有者的权限</li>
+<li><strong>第 5-7 个字符</strong>：与文件所有者同组用户的权限</li>
+<li><strong>第 8-10 个字符</strong>：其他用户的权限</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/Soft/linux01_rwx.png" alt="model check"></p>
+<h3 id="4-权限的数字表示"><a href="#4-权限的数字表示" class="headerlink" title="4. 权限的数字表示"></a>4. 权限的数字表示</h3><p>文件权限还可以使用 <strong>数字模式</strong> 来表示。每种权限对应一个数字值：</p>
+<ul>
+<li>读 (<code>r</code>) = 4</li>
+<li>写 (<code>w</code>) = 2</li>
+<li>执行 (<code>x</code>) = 1</li>
+</ul>
+<p>每个权限类别（所有者、组、其他用户）对应一个三位数字，计算方法是将权限的数字值相加。例如：</p>
+<ul>
+<li><strong><code>rwx</code></strong>（读、写、执行） = 4 + 2 + 1 = 7</li>
+<li><strong><code>rw-</code></strong>（读、写） = 4 + 2 + 0 = 6</li>
+<li><strong><code>r--</code></strong>（读） = 4 + 0 + 0 = 4</li>
+</ul>
+<p>例如，权限 <code>rwxr-xr--</code> 对应的数字表示是 <code>755</code>。</p>
+<p><img src="/images/Soft/linux01_rwx_777.png" alt="model check"></p>
+<h3 id="5-修改文件权限"><a href="#5-修改文件权限" class="headerlink" title="5. 修改文件权限"></a>5. 修改文件权限</h3><p><strong><code>chmod</code></strong> 命令用于修改文件的权限。可以通过 <strong>符号模式</strong>（字符表示）或 <strong>数字模式</strong> 来设置权限。</p>
+<h4 id="使用符号模式修改权限："><a href="#使用符号模式修改权限：" class="headerlink" title="使用符号模式修改权限："></a>使用符号模式修改权限：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> [权限设置] 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><code>r</code></strong>：读权限</li>
+<li><strong><code>w</code></strong>：写权限</li>
+<li><strong><code>x</code></strong>：执行权限</li>
+<li><strong><code>+</code></strong>：添加权限</li>
+<li><strong><code>-</code></strong>：去除权限</li>
+<li><strong><code>=</code></strong>：设置权限</li>
+</ul>
+<p>权限设置的目标可以是：</p>
+<ul>
+<li><strong><code>u</code></strong>：文件所有者（user）</li>
+<li><strong><code>g</code></strong>：文件所属组（group）</li>
+<li><strong><code>o</code></strong>：其他用户（others）</li>
+<li><strong><code>a</code></strong>：所有用户（all）</li>
+</ul>
+<p>例如：</p>
+<ul>
+<li><strong><code>chmod u+x file.txt</code></strong>：给文件所有者添加执行权限。</li>
+<li><strong><code>chmod g-w file.txt</code></strong>：去除文件所属组的写权限。</li>
+<li><strong><code>chmod o=r file.txt</code></strong>：将其他用户的权限设置为只读。</li>
+<li><strong><code>chmod a+x file.txt</code></strong>：给所有用户添加执行权限。</li>
+</ul>
+<h4 id="使用数字模式修改权限："><a href="#使用数字模式修改权限：" class="headerlink" title="使用数字模式修改权限："></a>使用数字模式修改权限：</h4><p>每个权限类别（所有者、组、其他用户）都用一个数字表示（如前所述）。例如：</p>
+<ul>
+<li><strong><code>chmod 755 file.txt</code></strong>：设置文件权限为 <code>rwxr-xr-x</code>。</li>
+<li><strong><code>chmod 644 file.txt</code></strong>：设置文件权限为 <code>rw-r--r--</code>。</li>
+<li><strong><code>chmod 777 file.txt</code></strong>：设置文件权限为 <code>rwxrwxrwx</code>，即所有用户都有读、写、执行权限。</li>
+</ul>
+<hr>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Yangwen</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cocklebur0924.github.io/2025/01/17/Linux01_beginner/">https://cocklebur0924.github.io/2025/01/17/Linux01_beginner/</a></span>
+                    </p>
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Study/"># Study</a>
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/05/24/Python05_parallel/">python 并行计算 | 利用multiprocessing的多进程并行实现</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Yangwen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+
+    </div>
+</body>
+
+</html>
