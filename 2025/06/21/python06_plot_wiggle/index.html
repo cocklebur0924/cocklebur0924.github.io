@@ -15,7 +15,7 @@
 
 
 
-<title>python绘制地震数据波形图 | python | Cocklebur&#39;s Blog</title>
+<title>python绘制地震数据波形图 | Cocklebur&#39;s Blog</title>
 
 
 
@@ -134,11 +134,73 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
 
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">python绘制地震数据波形图 | python</h1>
+            <h1 class="post-title">python绘制地震数据波形图</h1>
             
                 <div class="post-meta">
                     
@@ -147,7 +209,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">June 21, 2025&nbsp;&nbsp;20:57:00</a>
+                        Date: <a href="#">June 21, 2025&nbsp;&nbsp;21:11:00</a>
                         </span>
                     
                     
@@ -163,15 +225,13 @@
         </header>
 
         <div class="post-content">
-            <p>首先，准备好地震数据，这里以<a target="_blank" rel="noopener" href="https://nextcloud.seismic-unix.org/index.php/s/Bc7RgbwiGdCBZ8A">SU教程里的一个示例数据</a>为例。</p>
-<p>1.读取segy数据，看下长啥样，其中read_segy可以参考这篇笔记：<a href="https://cocklebur0924.github.io/2024/02/27/Python02_readsegy/">Python读写segy数据</a>。</p>
+            <h3 id="1-数据准备"><a href="#1-数据准备" class="headerlink" title="1. 数据准备"></a>1. 数据准备</h3><p>首先，准备好地震数据，这里以<a target="_blank" rel="noopener" href="https://nextcloud.seismic-unix.org/index.php/s/Bc7RgbwiGdCBZ8A">SU教程里的一个示例数据</a>为例。</p>
+<p>读取segy数据，看下长啥样，其中read_segy可以参考这篇笔记：<a href="https://cocklebur0924.github.io/2024/02/27/Python02_readsegy/">Python读写segy数据</a>。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">import read_segy</span><br></pre></td></tr></table></figure>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">data = read_segy.read_segy(data_dir=&#x27;./test.segy&#x27;,shotnum=1)</span><br><span class="line">data = data[0]</span><br><span class="line">print(data.shape)</span><br><span class="line">print(data.min())</span><br><span class="line">print(data.max())</span><br><span class="line"></span><br><span class="line">plt.figure(figsize=(10,6))</span><br><span class="line">plt.imshow(data,aspect=0.7,vmin=-100,vmax=100)</span><br></pre></td></tr></table></figure>
 <p><img src="/images/Soft/python06_1.png" alt="test_data"></p>
-<p>2.定义plot_wiggle函数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">def plot_wiggle(ax, data, title, selected_traces, trace_spacing, scale=50):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    绘制地震波形图（Wiggle Plot）</span><br><span class="line">    </span><br><span class="line">    参数:</span><br><span class="line">        ax: matplotlib的Axes对象</span><br><span class="line">        data: 地震数据（形状为 [时间采样点, 道数]）</span><br><span class="line">        title: 图名</span><br><span class="line">        selected_traces: 选择要显示的道（如 range(0, 128, 3)）每3道显示一道，避免波形太密</span><br><span class="line">        trace_spacing: 道间距（水平偏移量）</span><br><span class="line">        scale: 波形幅度缩放因子（默认50）</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    num_samples, num_traces = data.shape</span><br><span class="line">    max_trace = max(selected_traces) if selected_traces else num_traces - 1</span><br><span class="line">    max_offset = (max_trace + 1) * trace_spacing  # 动态计算最大偏移</span><br><span class="line">    </span><br><span class="line">    for trace_idx in selected_traces:</span><br><span class="line">        trace = data[:, trace_idx]</span><br><span class="line">        trace_normalized = scale * trace / np.max(np.abs(trace)) if np.max(np.abs(trace)) != 0 else trace</span><br><span class="line">        offset = trace_idx * trace_spacing</span><br><span class="line">        </span><br><span class="line">        if np.all(trace == 0):</span><br><span class="line">            ax.plot([offset, offset], [0, num_samples], color=&#x27;black&#x27;, linewidth=0.5)</span><br><span class="line">        else:</span><br><span class="line">            ax.plot(trace_normalized + offset, np.arange(num_samples), color=&#x27;black&#x27;, linewidth=0.5)</span><br><span class="line">    </span><br><span class="line">    # 设置图形属性</span><br><span class="line">    ax.set_title(title)</span><br><span class="line">    ax.invert_yaxis()  </span><br><span class="line">    ax.set_xlim(-trace_spacing, max_offset + trace_spacing)  # 若横轴为距离</span><br><span class="line">    #ax.set_xlim(-trace_spacing, max_trace + trace_spacing) </span><br><span class="line">    ax.set_ylim(num_samples, 0)</span><br><span class="line">    ax.set_xlabel(&#x27;Trace Number&#x27;)</span><br><span class="line">    ax.set_ylabel(&#x27;Time/ms&#x27;)</span><br><span class="line">    ax.set_yticks(np.linspace(0, num_samples, num=6))  # 设置6个Y轴刻度</span><br></pre></td></tr></table></figure>
-<p>3.绘制波形图示例</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 使用示例</span><br><span class="line">data = data</span><br><span class="line">trace_spacing = 1    # 道间距</span><br><span class="line">selected_traces = range(0, 1001, 10)  # 每隔10道选1道绘制</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fig, ax = plt.subplots(figsize=(8, 6))</span><br><span class="line">plot_wiggle(ax, data, &quot;Seismic Waveform&quot;, selected_traces, trace_spacing)</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h3 id="2-定义plot-wiggle函数"><a href="#2-定义plot-wiggle函数" class="headerlink" title="2. 定义plot_wiggle函数"></a>2. 定义plot_wiggle函数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">def plot_wiggle(ax, data, title, selected_traces, trace_spacing, scale=50):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    绘制地震波形图（Wiggle Plot）</span><br><span class="line">    </span><br><span class="line">    参数:</span><br><span class="line">        ax: matplotlib的Axes对象</span><br><span class="line">        data: 地震数据（形状为 [时间采样点, 道数]）</span><br><span class="line">        title: 图名</span><br><span class="line">        selected_traces: 选择要显示的道（如 range(0, 128, 3)）每3道显示一道，避免波形太密</span><br><span class="line">        trace_spacing: 道间距（水平偏移量）</span><br><span class="line">        scale: 波形幅度缩放因子（默认50）</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    num_samples, num_traces = data.shape</span><br><span class="line">    max_trace = max(selected_traces) if selected_traces else num_traces - 1</span><br><span class="line">    max_offset = (max_trace + 1) * trace_spacing  # 动态计算最大偏移</span><br><span class="line">    </span><br><span class="line">    for trace_idx in selected_traces:</span><br><span class="line">        trace = data[:, trace_idx]</span><br><span class="line">        trace_normalized = scale * trace / np.max(np.abs(trace)) if np.max(np.abs(trace)) != 0 else trace</span><br><span class="line">        offset = trace_idx * trace_spacing</span><br><span class="line">        </span><br><span class="line">        if np.all(trace == 0):</span><br><span class="line">            ax.plot([offset, offset], [0, num_samples], color=&#x27;black&#x27;, linewidth=0.5)</span><br><span class="line">        else:</span><br><span class="line">            ax.plot(trace_normalized + offset, np.arange(num_samples), color=&#x27;black&#x27;, linewidth=0.5)</span><br><span class="line">    </span><br><span class="line">    # 设置图形属性</span><br><span class="line">    ax.set_title(title)</span><br><span class="line">    ax.invert_yaxis()  </span><br><span class="line">    ax.set_xlim(-trace_spacing, max_offset + trace_spacing)  # 若横轴为距离</span><br><span class="line">    #ax.set_xlim(-trace_spacing, max_trace + trace_spacing) </span><br><span class="line">    ax.set_ylim(num_samples, 0)</span><br><span class="line">    ax.set_xlabel(&#x27;Trace Number&#x27;)</span><br><span class="line">    ax.set_ylabel(&#x27;Time/ms&#x27;)</span><br><span class="line">    ax.set_yticks(np.linspace(0, num_samples, num=6))  # 设置6个Y轴刻度</span><br></pre></td></tr></table></figure>
+<h3 id="3-绘制波形图示例"><a href="#3-绘制波形图示例" class="headerlink" title="3. 绘制波形图示例"></a>3. 绘制波形图示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 使用示例</span><br><span class="line">data = data</span><br><span class="line">trace_spacing = 1    # 道间距</span><br><span class="line">selected_traces = range(0, 1001, 10)  # 每隔10道选1道绘制</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fig, ax = plt.subplots(figsize=(8, 6))</span><br><span class="line">plot_wiggle(ax, data, &quot;Seismic Waveform&quot;, selected_traces, trace_spacing)</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 <p><img src="/images/Soft/python06_2.png" alt="test_data"></p>
 <p>如果绘制多个子图，示例如下：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">trace_spacing = 1</span><br><span class="line">selected_traces = range(0, 1001, 10)  </span><br><span class="line"></span><br><span class="line">data_list = [</span><br><span class="line">    data,</span><br><span class="line">    data</span><br><span class="line">]</span><br><span class="line">titles = [</span><br><span class="line">    &#x27;test1&#x27;,</span><br><span class="line">    &#x27;test2&#x27;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">fig, axs = plt.subplots(1, 2, figsize=(10, 6))</span><br><span class="line">for i, (data, title) in enumerate(zip(data_list, titles)):</span><br><span class="line">    plot_wiggle(axs[i], data, title, selected_traces, trace_spacing)</span><br><span class="line">plt.tight_layout(pad=1.5)</span><br></pre></td></tr></table></figure></p>
 <p><img src="/images/Soft/python06_3.png" alt="test_data"></p>
