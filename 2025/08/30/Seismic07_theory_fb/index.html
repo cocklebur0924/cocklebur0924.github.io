@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yangwen">
+
+
+    <meta name="subtitle" content="Cocklebur's Blog">
+
+
+
+
+<title>计算理论地震数据的初至 | python | Cocklebur&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/image/cocklebur.jpeg">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Cocklebur&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Cocklebur&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">计算理论地震数据的初至 | python</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Yangwen</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 30, 2025&nbsp;&nbsp;16:57:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Study/">Study</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>有时在研究过程中，需要用到理论正演数据的初至，如果手动拾取的话…想想都头大，本文提供一种计算理论正演地震数据初至的方法。</p>
+<h3 id="1-数据准备"><a href="#1-数据准备" class="headerlink" title="1. 数据准备"></a>1. 数据准备</h3><p>首先，准备一下数据，去<a target="_blank" rel="noopener" href="https://wiki.seg.org/wiki/Open_data">SEG Open data</a>下载一个<a target="_blank" rel="noopener" href="https://wiki.seg.org/wiki/Elastic_VSP_%E2%80%93_2D_Walk-Away">2D Walkaway VSP的正演数据</a>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import read_segy</span><br><span class="line">import matplotlib</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">import matplotlib.font_manager as fm</span><br><span class="line"></span><br><span class="line">#for font in fm.fontManager.ttflist: # 查看可用字体</span><br><span class="line">#    print(font.name)</span><br><span class="line">matplotlib.rcParams[&#x27;font.family&#x27;] = [&#x27;Times New Roman&#x27;, &#x27;SimHei&#x27;]</span><br><span class="line">matplotlib.rcParams[&#x27;axes.unicode_minus&#x27;] = False</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>看下数据长啥样：（其中read_segy可以参考这篇笔记：<a href="https://cocklebur0924.github.io/2024/02/27/Python02_readsegy/">Python读写segy数据</a>）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">model_vsp =  read_segy.read_segy(data_dir=&#x27;F:/data/SEAM_I_Walkaway_VSP/SEAM_Well1VSP_Shots23900.sgy&#x27;,shotnum=0)</span><br><span class="line">print(model_vsp.shape)</span><br><span class="line">print(model_vsp.min())</span><br><span class="line">print(model_vsp.max())</span><br><span class="line"></span><br><span class="line">plt.figure(figsize=(10,6))</span><br><span class="line">plt.imshow(model_vsp[0],vmin=-10,vmax=10,aspect=1)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Seismic/Seismic07_1.png" alt="vsp_data"></p>
+<h3 id="2-计算初至的函数"><a href="#2-计算初至的函数" class="headerlink" title="2. 计算初至的函数"></a>2. 计算初至的函数</h3><p>定义计算初至的函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">def calculate_fb(seismic_data, threshold=0.01):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    计算理论地震数据的first break</span><br><span class="line">    </span><br><span class="line">    参数:</span><br><span class="line">    seismic_data: 输入地震数据[单炮],shape为(n_time_samples, n_traces)</span><br><span class="line">    threshold: 相对阈值</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def _find_first(arr):</span><br><span class="line">        &quot;&quot;&quot;找到第一个超过相对阈值的点&quot;&quot;&quot;</span><br><span class="line">        max_val = np.max(np.abs(arr))</span><br><span class="line">        if max_val == 0:</span><br><span class="line">            return -1</span><br><span class="line">        thresholds = max_val * threshold</span><br><span class="line">        above_threshold_indices = np.where(np.abs(arr) &gt; thresholds)[0]</span><br><span class="line">        return above_threshold_indices[0] if len(above_threshold_indices) &gt; 0 else -1</span><br><span class="line">    </span><br><span class="line">    # 计算原始值</span><br><span class="line">    fb_raw = np.apply_along_axis(_find_first, axis=0, arr=seismic_data)</span><br><span class="line">    </span><br><span class="line">    # 前向填充</span><br><span class="line">    fb = fb_raw.copy()</span><br><span class="line">    for i in range(1, len(fb)):</span><br><span class="line">        if fb[i] == -1:</span><br><span class="line">            fb[i] = fb[i-1]</span><br><span class="line">    </span><br><span class="line">    # 处理开头的-1</span><br><span class="line">    if fb[0] == -1:</span><br><span class="line">        first_valid = next((x for x in fb if x != -1), 0)</span><br><span class="line">        fb[0] = first_valid</span><br><span class="line">    </span><br><span class="line">    return fb</span><br></pre></td></tr></table></figure>
+<h3 id="3-计算单炮的初至，检查结果"><a href="#3-计算单炮的初至，检查结果" class="headerlink" title="3. 计算单炮的初至，检查结果"></a>3. 计算单炮的初至，检查结果</h3><p>计算该数据第0炮的初至，并画图看看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">fb = calculate_fb(model_vsp[0],threshold=0.01)</span><br><span class="line">plt.figure(figsize=(10, 6))</span><br><span class="line">plt.plot(fb, linewidth=1)</span><br><span class="line">plt.title(&#x27;初至&#x27;)</span><br><span class="line">plt.xlabel(&#x27;Trace Number&#x27;)</span><br><span class="line">plt.ylabel(&#x27;Time Samples&#x27;)</span><br><span class="line">plt.gca().invert_yaxis()</span><br><span class="line">plt.grid(True, alpha=0.3)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line">print(f&quot;First Break shape = : &#123;fb.shape&#125;&quot;)</span><br><span class="line">print(f&quot;First Break range = : &#123;np.min(fb)&#125; - &#123;np.max(fb)&#125;&quot;)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Seismic/Seismic07_2.png" alt="vsp_fb"></p>
+<p>检查一下单道的拾取位置是否正确</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"># 检查其中4道吧</span><br><span class="line">threshold = 0.01 * np.max(np.abs(model_vsp[0]))</span><br><span class="line">plt.figure(figsize=(12, 10))</span><br><span class="line"></span><br><span class="line"># 检查第0道</span><br><span class="line">plt.subplot(2, 2, 1)</span><br><span class="line">plt.plot(model_vsp[0, :, 0])</span><br><span class="line">plt.axhline(y=threshold, color=&#x27;b&#x27;, linestyle=&#x27;--&#x27;, label=f&#x27;Threshold: &#123;threshold&#125;&#x27;)</span><br><span class="line">plt.axvline(x=fb[0], color=&#x27;r&#x27;, linestyle=&#x27;--&#x27;, label=&#x27;First above threshold&#x27;)</span><br><span class="line">plt.title(&#x27;trace 0&#x27;)</span><br><span class="line">plt.legend()</span><br><span class="line"></span><br><span class="line"># 检查第500道</span><br><span class="line">plt.subplot(2, 2, 2)</span><br><span class="line">plt.plot(model_vsp[0, :, 500])</span><br><span class="line">plt.axhline(y=threshold, color=&#x27;b&#x27;, linestyle=&#x27;--&#x27;, label=f&#x27;Threshold: &#123;threshold&#125;&#x27;)</span><br><span class="line">plt.axvline(x=fb[500], color=&#x27;r&#x27;, linestyle=&#x27;--&#x27;, label=&#x27;First above threshold&#x27;)</span><br><span class="line">plt.title(&#x27;trace 500&#x27;)</span><br><span class="line">plt.legend()</span><br><span class="line"></span><br><span class="line"># 检查第1000道</span><br><span class="line">plt.subplot(2, 2, 3)</span><br><span class="line">plt.plot(model_vsp[0, :, 1000])</span><br><span class="line">plt.axhline(y=threshold, color=&#x27;b&#x27;, linestyle=&#x27;--&#x27;, label=f&#x27;Threshold: &#123;threshold&#125;&#x27;)</span><br><span class="line">plt.axvline(x=fb[1000], color=&#x27;r&#x27;, linestyle=&#x27;--&#x27;, label=&#x27;First above threshold&#x27;)</span><br><span class="line">plt.title(&#x27;trace 1000&#x27;)</span><br><span class="line">plt.legend()</span><br><span class="line"></span><br><span class="line"># 检查第1500道</span><br><span class="line">plt.subplot(2, 2, 4)</span><br><span class="line">plt.plot(model_vsp[0, :, 1500])</span><br><span class="line">plt.axhline(y=threshold, color=&#x27;b&#x27;, linestyle=&#x27;--&#x27;, label=f&#x27;Threshold: &#123;threshold&#125;&#x27;)</span><br><span class="line">plt.axvline(x=fb[1500], color=&#x27;r&#x27;, linestyle=&#x27;--&#x27;, label=&#x27;First above threshold&#x27;)</span><br><span class="line">plt.title(&#x27;trace 1000&#x27;)</span><br><span class="line">plt.legend()</span><br><span class="line"></span><br><span class="line">plt.rcParams[&#x27;font.size&#x27;] = 14</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Seismic/Seismic07_3.png" alt="vsp_fb_check"></p>
+<p>绘制地震单炮和计算出的初至，叠合显示，检查结果是否正确：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">plt.figure(figsize=(10, 6))  </span><br><span class="line"></span><br><span class="line"># 绘制地震剖面</span><br><span class="line">img = plt.imshow(model_vsp[0], aspect=1, vmin=-10, vmax=10)</span><br><span class="line">plt.colorbar(label=&#x27;Amplitude&#x27;)</span><br><span class="line"></span><br><span class="line"># 绘制初至</span><br><span class="line">x = np.arange(model_vsp[0].shape[1])  </span><br><span class="line">plt.plot(x,fb, &#x27;r-&#x27;, linewidth=1.5)</span><br><span class="line"></span><br><span class="line">plt.xlabel(&#x27;Trace Number&#x27;)</span><br><span class="line">plt.ylabel(&#x27;Time Samples&#x27;)</span><br><span class="line">plt.title(&#x27;Seismic data with first break&#x27;)</span><br><span class="line">plt.legend()</span><br><span class="line"></span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Seismic/Seismic07_4.png" alt="vsp_fb_checkover"></p>
+<h3 id="4-计算所有炮的初至"><a href="#4-计算所有炮的初至" class="headerlink" title="4. 计算所有炮的初至"></a>4. 计算所有炮的初至</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">shots, times, traces = model_vsp.shape</span><br><span class="line">fb_all = np.zeros((shots, traces), dtype=int)</span><br><span class="line"></span><br><span class="line">for i in range(shots):</span><br><span class="line">    current_shot = model_vsp[i, :, :]</span><br><span class="line">    fb_all[i, :] = calculate_fb(current_shot, threshold=0.05)</span><br><span class="line"></span><br><span class="line">print(f&quot;fb_all shape: &#123;fb_all.shape&#125;&quot;) </span><br></pre></td></tr></table></figure>
+<p>检查一下结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">fig, axes = plt.subplots(2, 2, figsize=(10, 10))</span><br><span class="line">axes = axes.flatten()</span><br><span class="line"></span><br><span class="line">model_vsp_list = [model_vsp[0], model_vsp[20], model_vsp[40], model_vsp[60]] </span><br><span class="line">fb_list = [fb_all[0], fb_all[20], fb_all[40], fb_all[60]] </span><br><span class="line">titles = [&#x27;Shot 0&#x27;, &#x27;Shot 20&#x27;, &#x27;Shot 40&#x27;, &#x27;Shot 60&#x27;] </span><br><span class="line"></span><br><span class="line">for i in range(4):</span><br><span class="line">    img = axes[i].imshow(model_vsp_list[i], aspect=1, vmin=-10, vmax=10)</span><br><span class="line">    x = np.arange(model_vsp_list[i].shape[1])</span><br><span class="line">    axes[i].plot(x, fb_list[i], &#x27;r-&#x27;, linewidth=1.0)</span><br><span class="line">    </span><br><span class="line">    axes[i].set_xlabel(&#x27;Trace Number&#x27;)</span><br><span class="line">    axes[i].set_ylabel(&#x27;Time Samples&#x27;)</span><br><span class="line">    axes[i].set_title(f&#x27;&#123;titles[i]&#125;&#x27;)</span><br><span class="line"></span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Seismic/Seismic07_5.png" alt="vsp_fb_all"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Yangwen</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cocklebur0924.github.io/2025/08/30/Seismic07_theory_fb/">https://cocklebur0924.github.io/2025/08/30/Seismic07_theory_fb/</a></span>
+                    </p>
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Study/"># Study</a>
+                    
+                        <a href="/tags/Soft/"># Soft</a>
+                    
+                        <a href="/tags/Seismic/"># Seismic</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2025/06/21/python06_plot_wiggle/">python绘制地震数据波形图</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Yangwen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+
+    </div>
+</body>
+
+</html>
